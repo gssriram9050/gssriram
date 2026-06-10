@@ -1,136 +1,37 @@
 <!doctype html>
-<!--
-  ============================================================
-  Sriram G S | Personal Portfolio
-  ============================================================
-  Author      : Sriram G S
-  GitHub      : https://github.com/gssriram9050
-  LinkedIn    : https://linkedin.com/in/gssriramofficial
-  Live Site   : https://gssriram.my.canva.site
-  Last Updated: 2026
-  ============================================================
-
-  File Structure
-  ──────────────
-  1. <head>
-     1.1  Meta tags (SEO, Open Graph, Twitter Card)
-     1.2  Favicon & icons
-     1.3  External scripts (Canva SDKs, Tailwind CSS, Lucide icons)
-     1.4  CSS styles
-          • Reset & base layout
-          • Component styles (cards, nav, badges, etc.)
-          • Animation keyframes
-          • Form input styles
-
-  2. <body>
-     2.1  <nav>  — Sticky top navigation bar
-     2.2  <main> — Page content (SPA-style, one page shown at a time)
-          • #page-home      — About Me (hero, summary)
-          • #page-education — Education & Languages
-          • #page-skills    — Skills, Certifications & Coding Profiles
-          • #page-contact   — Contact info + Message form
-     2.3  <footer> — Copyright bar
-
-  3. <script>
-     3.1  State & defaultConfig — all editable content defined here
-     3.2  Navigation — navigateToPage(), updateNavButtons()
-     3.3  Rendering helpers — formatEducation(), attachContactItemClickHandler()
-     3.4  onConfigChange() — renders all dynamic content from config
-          • Hero section
-          • About section
-          • Skills & certifications
-          • Education & languages
-          • Coding profiles
-          • Contact links
-          • Resume button, footer
-     3.5  Contact form — handleContactFormSubmit(), showFieldError(), clearAllErrors()
-     3.6  SDK mappers — mapToCapabilities(), mapToEditPanelValues()
-     3.7  SDK init — elementSdk / standalone fallback, dataSdk
-     3.8  Location click handlers (hero & contact address → Google Maps)
-  ============================================================
--->
-<html lang="en">
-
-<!-- ============================================================
-     1. HEAD
-     ============================================================ -->
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="0IjDTYSFIyZlUf3Xw5AqRNPZdSNS-LspZ90a-w3OXX8">
-
   <title>Sriram G S | Portfolio</title>
-
-  <!-- 1.1 SEO Meta Tags -->
   <meta name="description" content="Official portfolio of Sriram G S | Intern @ Infosys Springboard | IT Student @ Karpagam College of Engineering (KCE) | Competitive Programmer | Developer | Projects, Skills, Achievements &amp; Certifications">
-  <meta name="keywords"    content="Sriram G S, SriramGS, Sriram-G-S, Sriram, gssriram, gssriram9050, gssriramofficial, Portfolio, Developer, Software Developer, Competitive Programmer, IT Student, Infosys Springboard Intern, Karpagam College of Engineering, KCE, C++, Python, Java, MySQL, Power BI, Data Structures and Algorithms, DSA, Problem Solving, LeetCode, CodeChef, Codeforces, GeeksforGeeks, Coding Ninjas, HackerRank, HackerEarth, Codolio, GitHub, LinkedIn, X, Twitter">
-  <meta name="author"      content="Sriram G S">
+  <meta name="keywords" content="Sriram G S, SriramGS, Sriram-G-S, Sriram, gssriram, gssriram9050, gssriramofficial, Portfolio, Developer, Software Developer, Competitive Programmer, IT Student, Infosys Springboard Intern, Karpagam College of Engineering, KCE, C++, Python, Java, MySQL, Power BI, Data Structures and Algorithms, DSA, Problem Solving, LeetCode, CodeChef, Codeforces, GeeksforGeeks, Coding Ninjas, HackerRank, HackerEarth, Codolio, GitHub, LinkedIn, X, Twitter">
+  <meta name="author" content="Sriram G S">
   <meta name="theme-color" content="#3b82f6">
-
-  <!-- 1.1 Open Graph (Facebook / LinkedIn previews) -->
-  <meta property="og:title"                content="Sriram G S | Portfolio">
-  <meta property="og:description"          content="Official portfolio of Sriram G S | Intern @ Infosys Springboard | IT Student @ Karpagam College of Engineering (KCE) | Competitive Programmer | Developer | Projects, Skills, Achievements &amp; Certifications">
-  <meta property="og:image"                content="https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg">
-  <meta property="og:type"                 content="website">
-  <meta property="article:published_time"  content="2026-01-01T00:00:00Z">
-
-  <!-- 1.1 Twitter Card -->
-  <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="Sriram G S | Portfolio">
+  <meta property="og:title" content="Sriram G S | Portfolio">
+  <meta property="og:description" content="Official portfolio of Sriram G S | Intern @ Infosys Springboard | IT Student @ Karpagam College of Engineering (KCE) | Competitive Programmer | Developer | Projects, Skills, Achievements &amp; Certifications">
+  <meta property="og:image" content="https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg">
+  <meta property="og:type" content="website">
+  <meta property="article:published_time" content="2026-01-01T00:00:00Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sriram G S | Portfolio">
   <meta name="twitter:description" content="Official portfolio of Sriram G S | Intern @ Infosys Springboard | IT Student @ Karpagam College of Engineering (KCE) | Competitive Programmer | Developer | Projects, Skills, Achievements &amp; Certifications">
-  <meta name="twitter:image"       content="https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg">
-
-  <!-- 1.2 Favicon & App Icons -->
-  <link rel="icon"             type="image/png" href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
-  <link rel="shortcut icon"                     href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
-  <link rel="apple-touch-icon"                  href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_180,h_180,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
-  <link rel="canonical"                         href="https://gssriram.my.canva.site">
-
-  <!-- 1.3 External Scripts -->
-  <!-- Canva Element SDK — enables config-based theming & editing in Canva -->
+  <meta name="twitter:image" content="https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg">
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
+  <link rel="shortcut icon" href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_180,h_180,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png">
+  <link rel="canonical" href="https://gssriram.my.canva.site">
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
-  <!-- Tailwind CSS — utility classes used for layout & spacing -->
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
-  <!-- Lucide Icons — SVG icon library (loaded but icons are inlined for reliability) -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
-  <!-- Canva Data SDK — handles contact form submission storage -->
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-
-  <!-- 1.4 CSS Styles -->
   <style>
-
-    /* ── Reset & Base Layout ───────────────────────────────── */
     * { box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; background-color: #0a0a0a; color: #e5e5e5; }
 
-    html {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-    }
+    body { box-sizing: border-box; background-color: #0a0a0a; }
 
-    /* Flex column so footer always sticks to the bottom */
-    body {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      background-color: #0a0a0a;
-      color: #e5e5e5;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Main scrolls naturally as the document — no nested scroll containers */
-    main {
-      scroll-behavior: smooth;
-      background-color: #0a0a0a;
-    }
-
-
-    /* ── Section Cards ─────────────────────────────────────── */
-    /* Hoverable card blocks used across all pages */
     .section-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
@@ -143,19 +44,14 @@
       transform: translateY(-2px) scale(1.005);
     }
 
-
-    /* ── Global Link Styles ────────────────────────────────── */
     a {
       transition: all 0.2s ease;
       cursor: pointer;
       position: relative;
     }
-    a:hover  { opacity: 0.7; transform: translateX(2px); }
-    a:focus  { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    a:hover { opacity: 0.7; transform: translateX(2px); }
+    a:focus { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
-
-    /* ── Contact & Location Items ──────────────────────────── */
-    /* Clickable rows on the Contact page (social links, address, phone) */
     .contact-item {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       padding: 12px 16px;
@@ -173,10 +69,18 @@
       box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
     }
     .contact-item:active { transform: translateY(-1px) scale(1.01); }
-    /* Prevent child elements from capturing pointer events (parent handles click) */
     .contact-item svg, .contact-item span, .contact-item a { pointer-events: none; }
 
-    /* Location pill (hero + contact address) */
+    .interactive-text {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 8px;
+      border-radius: 8px;
+    }
+    .interactive-text:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
     .location-item {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       padding: 12px 16px;
@@ -196,21 +100,6 @@
     .location-item:active { transform: translateY(-1px) scale(1.01); }
     .location-item span, .location-item * { pointer-events: none; }
 
-
-    /* ── Interactive Text ──────────────────────────────────── */
-    /* Subtle hover scale for hero name & tagline */
-    .interactive-text {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 8px;
-      border-radius: 8px;
-    }
-    .interactive-text:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-    }
-
-
-    /* ── Profile Picture ───────────────────────────────────── */
     #profile-picture {
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -219,8 +108,13 @@
       box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3) !important;
     }
 
+    .page-content { animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-    /* ── Navigation Bar ────────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .nav-btn {
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -235,18 +129,18 @@
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
-    .nav-btn:focus  { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    .nav-btn:focus { outline: 2px solid #3b82f6; outline-offset: 2px; }
     .nav-btn:active { transform: translateY(0); }
 
-
-    /* ── Page Titles ───────────────────────────────────────── */
     .page-title {
       font-size: 2rem;
       animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
 
-
-    /* ── Skill Badges ──────────────────────────────────────── */
     .skill-badge {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
@@ -256,8 +150,6 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
-
-    /* ── Education / Certification / Language List Items ───── */
     .edu-item, .cert-item, .lang-item {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       padding: 8px;
@@ -269,21 +161,28 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
     }
 
+    #hero-name { animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-    /* ── Form Input Styles ─────────────────────────────────── */
-    /*
-      Base styles for all inputs and textareas.
-      Individual fields override with inline styles (padding, font-size)
-      to exactly match the Send Message button dimensions.
-    */
+    .stagger-animation { animation: staggerFade 0.5s ease-out backwards; }
+    @keyframes staggerFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    main { scroll-behavior: smooth; background-color: #0a0a0a; }
+
+    /* Form input styles - matched to ref.html */
     input, textarea {
       background-color: rgba(107, 114, 128, 0.1);
       border: 1px solid #6b7280;
       color: #e5e5e5;
       border-radius: 8px;
-      padding: 14px 24px;       /* matches button padding exactly */
+      padding: 14px 24px;
       width: 100%;
-      box-sizing: border-box;
       font-family: inherit;
       font-size: 1rem;
       line-height: 1.5;
@@ -295,995 +194,759 @@
       background-color: rgba(59, 130, 246, 0.08);
     }
     input::placeholder, textarea::placeholder { color: #6b7280; }
-
-
-    /* ── Animation Keyframes ───────────────────────────────── */
-
-    /* Page entry — slides up from below */
-    .page-content { animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Page title — slides in from the left */
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-20px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    /* Hero name — scales up from slightly smaller */
-    #hero-name { animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-    @keyframes fadeInScale {
-      from { opacity: 0; transform: scale(0.9); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    /* Staggered list items (used on skills/certs) */
-    .stagger-animation { animation: staggerFade 0.5s ease-out backwards; }
-    @keyframes staggerFade {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
   </style>
 </head>
+<body class="h-full">
 
-<!-- ============================================================
-     2. BODY
-     ============================================================ -->
-<body>
-
-  <!-- ══════════════════════════════════════════════════════════
-       2.1  NAVIGATION BAR
-       Sticky bar at the top with four page-switch buttons.
-       Active page button is highlighted in primary blue.
-       ══════════════════════════════════════════════════════════ -->
-  <nav id="navbar"
-       class="w-full border-b"
-       style="position:sticky; top:0; z-index:100; background-color:#1a1a1a; border-color:rgba(107,114,128,0.25);">
+  <nav id="navbar" class="w-full border-b" style="position: sticky; top: 0; z-index: 100; background-color: #1a1a1a; border-color: rgba(107,114,128,0.25);">
     <div class="max-w-4xl mx-auto px-6 py-4">
       <div class="flex justify-center gap-2 flex-wrap">
-
-        <!-- Each button calls navigateToPage() and carries data-page for active state tracking -->
-        <button onclick="navigateToPage('home')"
-                class="nav-btn px-4 py-2 rounded-lg font-medium active"
-                data-page="home"
-                style="background-color:#3b82f6; color:#fff;">
-          About Me
-        </button>
-
-        <button onclick="navigateToPage('education')"
-                class="nav-btn px-4 py-2 rounded-lg font-medium"
-                data-page="education"
-                style="background-color:transparent; color:#e5e5e5;">
-          Education &amp; Languages
-        </button>
-
-        <button onclick="navigateToPage('skills')"
-                class="nav-btn px-4 py-2 rounded-lg font-medium"
-                data-page="skills"
-                style="background-color:transparent; color:#e5e5e5;">
-          Skills &amp; Certifications
-        </button>
-
-        <button onclick="navigateToPage('contact')"
-                class="nav-btn px-4 py-2 rounded-lg font-medium"
-                data-page="contact"
-                style="background-color:transparent; color:#e5e5e5;">
-          Contact
-        </button>
-
+        <button onclick="navigateToPage('home')" class="nav-btn px-4 py-2 rounded-lg font-medium active" data-page="home" style="background-color:#3b82f6;color:#fff;">About Me</button>
+        <button onclick="navigateToPage('education')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="education" style="background-color:transparent;color:#e5e5e5;">Education &amp; Languages</button>
+        <button onclick="navigateToPage('skills')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="skills" style="background-color:transparent;color:#e5e5e5;">Skills &amp; Certifications</button>
+        <button onclick="navigateToPage('contact')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="contact" style="background-color:transparent;color:#e5e5e5;">Contact</button>
       </div>
     </div>
   </nav>
 
-
-  <!-- ══════════════════════════════════════════════════════════
-       2.2  MAIN CONTENT AREA
-       Single-page app pattern: only one #page-* div is visible
-       at a time. navigateToPage() toggles display.
-       flex:1 ensures this fills space so footer stays at bottom.
-       ══════════════════════════════════════════════════════════ -->
-  <main class="w-full"
-        style="flex:1; background-color:#0a0a0a; color:#e5e5e5;
-               font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-               font-size:16px;">
+  <main class="w-full h-full overflow-auto" style="background-color:#0a0a0a;color:#e5e5e5;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;">
     <div class="max-w-4xl mx-auto px-6 py-12">
 
-
-      <!-- ────────────────────────────────────────────────────
-           PAGE: HOME — About Me
-           Contains: profile photo, name, tagline, location,
-                     resume button, and summary paragraph.
-           ──────────────────────────────────────────────────── -->
+      <!-- HOME PAGE -->
       <div id="page-home" class="page-content">
-
-        <!-- Hero Header -->
         <header class="mb-12 text-center">
           <div class="flex flex-col items-center gap-6 mb-8">
-
-            <!-- Profile Photo -->
             <div id="profile-picture-container" class="flex-shrink-0">
-              <div id="profile-picture"
-                   class="w-48 h-48 rounded-2xl"
-                   style="box-shadow:0 8px 24px rgba(59,130,246,0.2);
-                          background-image:url('https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg');
-                          background-size:cover; background-position:center;
-                          background-repeat:no-repeat; background-color:#1a1a1a;">
+              <div id="profile-picture" class="w-48 h-48 rounded-2xl" style="box-shadow:0 8px 24px rgba(59,130,246,0.2);background-image:url('https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;background-color:#1a1a1a;">
                 <img src="https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg"
                      alt="Sriram G S - Professional Photo"
-                     style="width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;">
+                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;">
               </div>
             </div>
-
-            <!-- Name, Tagline, Location & Resume Button -->
             <div>
-              <h1 id="hero-name"
-                  class="mb-3 font-bold interactive-text"
-                  style="font-size:2.5rem; color:#e5e5e5;">
-                Sriram G S
-              </h1>
-
-              <p id="hero-tagline"
-                 class="mb-3 interactive-text"
-                 style="font-size:1.125rem; color:#6b7280;">
-                Intern @ Infosys Springboard | IT Student @ KCE | 1350+ Problems Solved |
-                100+ Active Coding Days | LeetCode 1650+ | CodeChef 2&#9733; (1460+) | CodeForces 1130+
-              </p>
-
-              <!-- Location pill — onclick opens Google Maps (set in JS) -->
-              <div id="hero-location-item"
-                   class="location-item inline-flex items-center justify-center gap-2 px-4 py-2"
-                   style="color:#3b82f6; cursor:pointer;">
+              <h1 id="hero-name" class="mb-3 font-bold interactive-text" style="font-size:2.5rem;color:#e5e5e5;">Sriram G S</h1>
+              <p id="hero-tagline" class="mb-3 interactive-text" style="font-size:1.125rem;color:#6b7280;">Intern @ Infosys Springboard | IT Student @ KCE | 1350+ Problems Solved | 100+ Active Coding Days | LeetCode 1650+ | CodeChef 2&#9733; (1460+) | CodeForces 1130+</p>
+              <div id="hero-location-item" class="location-item inline-flex items-center justify-center gap-2 px-4 py-2" style="color:#3b82f6;cursor:pointer;">
                 <span>&#128205;</span>
                 <span id="hero-location-text">Coimbatore, Tamil Nadu, India</span>
               </div>
-
-              <!-- Resume Button -->
               <div class="mt-6">
                 <a id="resume-button"
                    href="https://www.canvaqr.com/RGEtN-028r"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium"
-                   style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);
-                          color:white; text-decoration:none; white-space:nowrap;
-                          cursor:pointer; font-size:0.875rem; transition:all 0.3s;"
-                   onmouseenter="this.style.boxShadow='0 12px 32px rgba(59,130,246,0.4)'; this.style.transform='translateY(-4px) scale(1.05)';"
-                   onmouseleave="this.style.boxShadow=''; this.style.transform='translateY(0) scale(1)';"
+                   style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);color:white;text-decoration:none;white-space:nowrap;cursor:pointer;font-size:0.875rem;transition:all 0.3s;"
+                   onmouseenter="this.style.boxShadow='0 12px 32px rgba(59,130,246,0.4)';this.style.transform='translateY(-4px) scale(1.05)';"
+                   onmouseleave="this.style.boxShadow='';this.style.transform='translateY(0) scale(1)';"
                    onmousedown="this.style.transform='translateY(-2px) scale(0.95)';"
                    onmouseup="this.style.transform='translateY(-4px) scale(1.05)';">
-                  <!-- Document icon -->
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round"
-                       style="flex-shrink:0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
                   </svg>
                   View My Resume
                 </a>
               </div>
-            </div><!-- /name block -->
-
+            </div>
           </div>
-        </header><!-- /hero header -->
-
-        <!-- Summary / About Section -->
-        <section class="mb-10 section-card rounded-lg p-6"
-                 style="border-left:4px solid #3b82f6;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #3b82f6;">
-          <h2 id="about-title" class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Summary</h2>
-          <!-- Content injected by onConfigChange() from defaultConfig.about_description -->
-          <p id="about-description" class="leading-relaxed" style="font-size:1rem; color:#e5e5e5; white-space:pre-line;"></p>
+        </header>
+        <section class="mb-10 section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="about-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Summary</h2>
+          <p id="about-description" class="leading-relaxed" style="font-size:1rem;color:#e5e5e5;white-space:pre-line;"></p>
         </section>
+      </div>
 
-      </div><!-- /#page-home -->
-
-
-      <!-- ────────────────────────────────────────────────────
-           PAGE: EDUCATION — Education & Languages
-           Contains: three education entries and language list.
-           Education content is rendered by formatEducation() in JS.
-           ──────────────────────────────────────────────────── -->
+      <!-- EDUCATION PAGE -->
       <div id="page-education" class="page-content" style="display:none;">
-
-        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">
-          Education &amp; Languages
-        </h1>
-
-        <!-- Education Entries -->
-        <section class="section-card rounded-lg p-6 mb-6"
-                 style="border-left:4px solid #3b82f6;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #3b82f6;">
-          <h2 class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Education</h2>
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Education &amp; Languages</h1>
+        <section class="section-card rounded-lg p-6 mb-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Education</h2>
           <div class="space-y-6">
-
-            <!-- Education entry 1 — content set by onConfigChange() → education_1 -->
             <div class="edu-item">
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
                 <div id="education-1" class="flex-1"></div>
               </div>
             </div>
-
-            <!-- Education entry 2 — education_2 -->
             <div class="edu-item">
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
                 <div id="education-2" class="flex-1"></div>
               </div>
             </div>
-
-            <!-- Education entry 3 — education_3 -->
             <div class="edu-item">
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
                 <div id="education-3" class="flex-1"></div>
               </div>
             </div>
-
           </div>
         </section>
-
-        <!-- Languages -->
-        <section class="section-card rounded-lg p-6 text-center"
-                 style="border-left:4px solid #3b82f6;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #3b82f6;">
-          <h2 id="languages-title" class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Languages</h2>
-          <!-- Language items injected by onConfigChange() → languages_list (comma-separated) -->
+        <section class="section-card rounded-lg p-6 text-center" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="languages-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Languages</h2>
           <div id="languages-container" class="space-y-2"></div>
         </section>
+      </div>
 
-      </div><!-- /#page-education -->
-
-
-      <!-- ────────────────────────────────────────────────────
-           PAGE: SKILLS — Skills & Certifications
-           Contains: skill badges, certification list, coding profiles.
-           All data comes from defaultConfig via onConfigChange().
-           ──────────────────────────────────────────────────── -->
+      <!-- SKILLS PAGE -->
       <div id="page-skills" class="page-content" style="display:none;">
-
-        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">
-          Skills &amp; Certifications
-        </h1>
-
-        <!-- Top Skills — badge pills injected from skills_list (comma-separated) -->
-        <section class="mb-10 section-card rounded-lg p-6"
-                 style="border-left:4px solid #6b7280;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #6b7280;">
-          <h2 id="skills-title" class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Top Skills</h2>
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Skills &amp; Certifications</h1>
+        <section class="mb-10 section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="skills-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Top Skills</h2>
           <div id="skills-container" class="flex flex-wrap gap-3"></div>
         </section>
-
-        <!-- Certifications — list items injected from certifications_list (pipe-separated) -->
-        <section class="mb-10 section-card rounded-lg p-6"
-                 style="border-left:4px solid #6b7280;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #6b7280;">
-          <h2 id="certifications-title" class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Certifications</h2>
+        <section class="mb-10 section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="certifications-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Certifications</h2>
           <ul id="certifications-list" class="space-y-2"></ul>
         </section>
-
-        <!-- Coding Profiles — links to competitive programming platforms -->
-        <section class="section-card rounded-lg p-6"
-                 style="border-left:4px solid #6b7280;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #6b7280;">
-          <h2 id="coding_profiles_title" class="mb-4 font-bold" style="font-size:1.5rem; color:#e5e5e5;">Coding Profiles</h2>
+        <section class="section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="coding_profiles_title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Coding Profiles</h2>
           <div id="coding-profiles-container" class="grid grid-cols-2 gap-4">
-
-            <!-- LeetCode -->
             <div class="contact-item flex items-center justify-center gap-2">
               <span style="font-size:20px;">&#9889;</span>
-              <a id="coding-profile-leetcode-link"
-                 href="https://leetcode.com/u/gssriram"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">LeetCode</a>
+              <a id="coding-profile-leetcode-link" href="https://leetcode.com/u/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">LeetCode</a>
             </div>
-
-            <!-- GeeksforGeeks -->
             <div class="contact-item flex items-center justify-center gap-2">
               <span style="font-size:20px;">&#129504;</span>
-              <a id="coding-profile-geeksforgeeks-link"
-                 href="https://geeksforgeeks.org/profile/gssriram"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">GeeksforGeeks</a>
+              <a id="coding-profile-geeksforgeeks-link" href="https://geeksforgeeks.org/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">GeeksforGeeks</a>
             </div>
-
-            <!-- HackerRank -->
             <div class="contact-item flex items-center justify-center gap-2">
               <span style="font-size:20px;">&#127919;</span>
-              <a id="coding-profile-hackerrank-link"
-                 href="https://hackerrank.com/profile/gssriram"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">HackerRank</a>
+              <a id="coding-profile-hackerrank-link" href="https://hackerrank.com/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">HackerRank</a>
             </div>
-
-            <!-- CodeChef -->
             <div class="contact-item flex items-center justify-center gap-2">
               <span style="font-size:20px;">&#128104;&#8205;&#127859;</span>
-              <a id="coding-profile-codechef-link"
-                 href="https://codechef.com/users/gssriram"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">CodeChef</a>
+              <a id="coding-profile-codechef-link" href="https://codechef.com/users/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">CodeChef</a>
             </div>
-
           </div>
         </section>
+      </div>
 
-      </div><!-- /#page-skills -->
-
-
-      <!-- ────────────────────────────────────────────────────
-           PAGE: CONTACT — Contact Info & Message Form
-           Contains: address, phone, email, social links,
-                     and a contact form that saves via dataSdk
-                     or falls back to a mailto: link.
-           ──────────────────────────────────────────────────── -->
+      <!-- CONTACT PAGE -->
       <div id="page-contact" class="page-content" style="display:none;">
-
-        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">
-          Contact Information
-        </h1>
-
-        <!-- Contact Links Card -->
-        <section class="section-card rounded-lg p-6 text-center"
-                 style="border-left:4px solid #6b7280;
-                        background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #6b7280;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Contact Information</h1>
+        <section class="section-card rounded-lg p-6 text-center" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
           <div class="space-y-3">
-
-            <!-- Address — onclick opens Google Maps (set in JS) -->
-            <div id="contact-address-item"
-                 class="contact-item flex items-center justify-center gap-2"
-                 style="color:#3b82f6; cursor:pointer;">
+            <div id="contact-address-item" class="contact-item flex items-center justify-center gap-2" style="color:#3b82f6;cursor:pointer;">
               <span>&#128205;</span>
               <span id="contact-address-text">Dharmapuri, Tamil Nadu, India</span>
             </div>
-
-            <!-- Phone -->
             <div class="contact-item flex items-center justify-center gap-2">
               <span class="text-xl flex-shrink-0">&#128241;</span>
-              <a id="contact-mobile"
-                 href="tel:+916383279050"
-                 style="text-decoration:none; color:#3b82f6;">+91 63832 79050</a>
+              <a id="contact-mobile" href="tel:+916383279050" style="text-decoration:none;color:#3b82f6;">+91 63832 79050</a>
             </div>
-
-            <!-- Email — Gmail icon -->
             <div class="contact-item flex items-center justify-center gap-2">
               <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="#EA4335" style="margin-top:2px;">
                 <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
               </svg>
-              <a id="contact-email"
-                 href="mailto:gssriramofficial@gmail.com"
-                 style="text-decoration:none; color:#3b82f6;">gssriramofficial@gmail.com</a>
+              <a id="contact-email" href="mailto:gssriramofficial@gmail.com" style="text-decoration:none;color:#3b82f6;">gssriramofficial@gmail.com</a>
             </div>
-
-            <!-- LinkedIn -->
             <div class="contact-item flex items-center justify-center gap-2">
               <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="#0A66C2" style="margin-top:2px;">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
               </svg>
-              <a id="contact-linkedin"
-                 href="https://linkedin.com/in/gssriramofficial"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">linkedin.com/in/gssriramofficial</a>
+              <a id="contact-linkedin" href="https://linkedin.com/in/gssriramofficial" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">linkedin.com/in/gssriramofficial</a>
             </div>
-
-            <!-- GitHub -->
             <div class="contact-item flex items-center justify-center gap-2">
-              <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:2px; color:#e5e5e5;">
+              <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:2px;color:#e5e5e5;">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
-              <a id="contact-github"
-                 href="https://github.com/gssriram9050"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">github.com/gssriram9050</a>
+              <a id="contact-github" href="https://github.com/gssriram9050" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">github.com/gssriram9050</a>
             </div>
-
-            <!-- Facebook -->
             <div class="contact-item flex items-center justify-center gap-2">
               <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="#1877F2" style="margin-top:2px;">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              <a id="contact-facebook"
-                 href="https://facebook.com/gssriram9050"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">facebook.com/gssriram9050</a>
+              <a id="contact-facebook" href="https://facebook.com/gssriram9050" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">facebook.com/gssriram9050</a>
             </div>
-
-            <!-- Instagram -->
             <div class="contact-item flex items-center justify-center gap-2">
               <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="#E4405F" style="margin-top:2px;">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
               </svg>
-              <a id="contact-instagram"
-                 href="https://instagram.com/gssriram9050"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">instagram.com/gssriram9050</a>
+              <a id="contact-instagram" href="https://instagram.com/gssriram9050" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">instagram.com/gssriram9050</a>
             </div>
-
-            <!-- X (formerly Twitter) -->
             <div class="contact-item flex items-center justify-center gap-2">
-              <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:2px; color:#e5e5e5;">
+              <svg class="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-top:2px;color:#e5e5e5;">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-              <a id="contact-x"
-                 href="https://x.com/gssriram9050"
-                 target="_blank" rel="noopener noreferrer"
-                 style="text-decoration:none; color:#3b82f6;">x.com/gssriram9050</a>
+              <a id="contact-x" href="https://x.com/gssriram9050" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">x.com/gssriram9050</a>
             </div>
-
+            <!-- New Portfolio Link -->
+            <div class="contact-item flex items-center justify-center gap-2">
+              <img src="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png" alt="Portfolio" style="width:20px;height:20px;flex-shrink:0;border-radius:4px;">
+              <a href="https://gssriram.my.canva.site" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">gssriram.my.canva.site</a>
+            </div>
           </div>
-        </section><!-- /contact links -->
+        </section>
 
-
-        <!-- ── Contact / Message Form ─────────────────────── -->
-        <!--
-          Submits via Canva dataSdk.create() if available,
-          otherwise falls back to a mailto: link.
-          Validation runs on submit; errors shown inline per field.
-        -->
-        <section class="section-card rounded-lg mt-6"
-                 style="background-color:#1a1a1a;
-                        border:1px solid rgba(107,114,128,0.12);
-                        border-left:4px solid #3b82f6;
-                        overflow:hidden;">
-
+        <!-- Simplified Form matching ref.html -->
+        <section class="section-card rounded-lg mt-6" style="background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;overflow:hidden;">
           <div id="contact-form" style="padding:28px 24px 32px;">
-            <h2 id="message-form-title"
-                style="font-size:1.5rem; font-weight:700; color:#e5e5e5; margin:0 0 24px 0;">
+            <h2 id="message-form-title" style="font-size:1.5rem; font-weight:700; color:#e5e5e5; margin:0 0 24px 0;">
               Send Me a Message
             </h2>
 
-            <!-- Full Name field -->
+            <!-- Full Name -->
             <div style="margin-bottom:18px;">
-              <label for="form-name"
-                     style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
+              <label for="form-name" style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
                 Full Name <span style="color:#ef4444;">*</span>
               </label>
-              <input type="text"
-                     id="form-name"
-                     name="name"
-                     placeholder="Your full name"
-                     style="display:block; width:100%; box-sizing:border-box;
-                            padding:14px 24px; font-size:1rem; font-family:inherit;
-                            border-radius:8px; border:1px solid #6b7280;
-                            background-color:rgba(107,114,128,0.1); color:#e5e5e5;
-                            outline:none; transition:border-color 0.2s,background-color 0.2s;">
-              <!-- Inline error shown by showFieldError() -->
+              <input type="text" id="form-name" name="name" placeholder="Your full name">
               <div id="form-name-error" style="color:#ef4444; font-size:0.78rem; margin-top:5px; display:none;"></div>
             </div>
 
-            <!-- Email Address field -->
+            <!-- Email -->
             <div style="margin-bottom:18px;">
-              <label for="form-email"
-                     style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
+              <label for="form-email" style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
                 Email Address <span style="color:#ef4444;">*</span>
               </label>
-              <input type="email"
-                     id="form-email"
-                     name="email"
-                     placeholder="your@email.com"
-                     style="display:block; width:100%; box-sizing:border-box;
-                            padding:14px 24px; font-size:1rem; font-family:inherit;
-                            border-radius:8px; border:1px solid #6b7280;
-                            background-color:rgba(107,114,128,0.1); color:#e5e5e5;
-                            outline:none; transition:border-color 0.2s,background-color 0.2s;">
+              <input type="email" id="form-email" name="email" placeholder="your@email.com">
               <div id="form-email-error" style="color:#ef4444; font-size:0.78rem; margin-top:5px; display:none;"></div>
             </div>
 
-            <!-- Subject field -->
+            <!-- Subject -->
             <div style="margin-bottom:18px;">
-              <label for="form-subject"
-                     style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
+              <label for="form-subject" style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
                 Subject <span style="color:#ef4444;">*</span>
               </label>
-              <input type="text"
-                     id="form-subject"
-                     name="subject"
-                     placeholder="What is this about?"
-                     style="display:block; width:100%; box-sizing:border-box;
-                            padding:14px 24px; font-size:1rem; font-family:inherit;
-                            border-radius:8px; border:1px solid #6b7280;
-                            background-color:rgba(107,114,128,0.1); color:#e5e5e5;
-                            outline:none; transition:border-color 0.2s,background-color 0.2s;">
+              <input type="text" id="form-subject" name="subject" placeholder="What is this about?">
               <div id="form-subject-error" style="color:#ef4444; font-size:0.78rem; margin-top:5px; display:none;"></div>
             </div>
 
-            <!-- Message textarea -->
+            <!-- Message -->
             <div style="margin-bottom:24px;">
-              <label for="form-message"
-                     style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
+              <label for="form-message" style="display:block; margin-bottom:8px; font-size:1rem; font-weight:500; color:#e5e5e5;">
                 Message <span style="color:#ef4444;">*</span>
               </label>
-              <textarea id="form-message"
-                        name="message"
-                        rows="6"
-                        placeholder="Your message here..."
-                        style="display:block; width:100%; box-sizing:border-box;
-                               padding:14px 24px; font-size:1rem; font-family:inherit;
-                               border-radius:8px; border:1px solid #6b7280;
-                               background-color:rgba(107,114,128,0.1); color:#e5e5e5;
-                               outline:none; resize:vertical; min-height:150px;
-                               transition:border-color 0.2s,background-color 0.2s;"></textarea>
+              <textarea id="form-message" name="message" rows="6" placeholder="Your message here..."></textarea>
               <div id="form-message-error" style="color:#ef4444; font-size:0.78rem; margin-top:5px; display:none;"></div>
             </div>
 
-            <!-- Submit button — same size & radius as form fields -->
-            <button type="button"
-                    id="form-submit-btn"
-                    onclick="handleContactFormSubmit()"
-                    style="width:100%; padding:14px 24px; border-radius:8px;
-                           font-weight:600; font-size:1rem;
-                           background:#3b82f6; color:white;
-                           cursor:pointer; border:none;
-                           transition:background 0.2s, transform 0.15s;"
-                    onmouseenter="this.style.background='#2563eb';"
-                    onmouseleave="this.style.background='#3b82f6';"
-                    onmousedown="this.style.transform='scale(0.99)';"
-                    onmouseup="this.style.transform='scale(1)';">
+            <!-- Submit -->
+            <button type="button" id="form-submit-btn" onclick="handleContactFormSubmit()"
+              style="width:100%; padding:14px 24px; border-radius:8px; font-weight:600; font-size:1rem; background:#3b82f6; color:white; cursor:pointer; border:none; transition:background 0.2s, transform 0.15s;"
+              onmouseenter="this.style.background='#2563eb';"
+              onmouseleave="this.style.background='#3b82f6';"
+              onmousedown="this.style.transform='scale(0.99)';"
+              onmouseup="this.style.transform='scale(1)';">
               Send Message
             </button>
 
-            <!-- Form submission status (success / error) — shown after submit -->
-            <div id="form-status"
-                 style="display:none; margin-top:16px; padding:16px 18px;
-                        border-radius:10px; border-left:4px solid;"></div>
-
+            <div id="form-status" style="display:none; margin-top:16px; padding:16px 18px; border-radius:10px; border-left:4px solid;"></div>
           </div>
-        </section><!-- /message form -->
-
-      </div><!-- /#page-contact -->
-
+        </section>
+      </div>
 
     </div>
-  </main><!-- /main -->
+  </main>
 
-
-  <!-- ══════════════════════════════════════════════════════════
-       2.3  FOOTER
-       Simple copyright bar, always at the bottom via flex layout.
-       ══════════════════════════════════════════════════════════ -->
-  <footer id="footer"
-          class="w-full border-t"
-          style="position:relative; z-index:50;
-                 background-color:#1a1a1a;
-                 border-color:rgba(107,114,128,0.25);">
+  <footer id="footer" class="w-full border-t" style="position:relative;z-index:50;background-color:#1a1a1a;border-color:rgba(107,114,128,0.25);">
     <div class="max-w-4xl mx-auto px-6 py-6">
       <div class="text-center">
-        <p id="footer-text"
-           style="margin:0; font-size:0.8125rem; color:#6b7280;">
-          &#169; Sriram G S &bull; 2026 &bull; All Rights Reserved
-        </p>
+        <p id="footer-text" style="margin:0;font-size:0.8125rem;color:#6b7280;">&#169; Sriram G S &bull; 2026 &bull; All Rights Reserved</p>
       </div>
     </div>
   </footer>
 
-
-  <!-- ============================================================
-       3. JAVASCRIPT
-       ============================================================ -->
   <script>
-
-    /* ── 3.1  State & Default Config ─────────────────────────────
-       All editable content lives here.
-       When running inside Canva, elementSdk.init() calls
-       onConfigChange() with the editor's config values.
-       Standalone (local / GitHub Pages), defaultConfig is used directly.
-    ─────────────────────────────────────────────────────────────── */
     let currentPage = 'home';
 
     const defaultConfig = {
-      /* Theming */
-      background_color:       "#0a0a0a",
-      surface_color:          "#1a1a1a",
-      text_color:             "#e5e5e5",
-      primary_action_color:   "#3b82f6",
+      background_color: "#0a0a0a",
+      surface_color: "#1a1a1a",
+      text_color: "#e5e5e5",
+      primary_action_color: "#3b82f6",
       secondary_action_color: "#6b7280",
-      font_family:            "system-ui",
-      font_size:              16,
-
-      /* Hero / About Me */
-      hero_name:        "Sriram G S",
-      hero_tagline:     "Intern @ Infosys Springboard | IT Student @ KCE | 1350+ Problems Solved | 100+ Active Coding Days | LeetCode 1650+ | CodeChef 2\u2605 (1460+) | CodeForces 1130+",
-      hero_location:    "Coimbatore, Tamil Nadu, India",
-      about_title:      "Summary",
-      about_description:
-        "As someone who pursued Computer Science as my major in higher secondary, I built a strong foundation in C++, Python, and MySQL while earning consecutive centums in Computer Science. This deepened my passion for technology and inspired me to pursue engineering. Due to my dedication and academic performance, I was awarded a merit scholarship from Karpagam College of Engineering, where I am currently pursuing a B.Tech in Information Technology.\n\nDuring my first semester, I strengthened my programming fundamentals through C. In my second semester, I expanded my knowledge into Data Structures and Algorithms, along with HTML, CSS, and JavaScript. As I enter my third semester, I am excited to continue learning and exploring technologies such as Java.\n\nAlongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1350+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.\n\nI am currently an Intern at Infosys Springboard, where I continue to gain practical exposure while exploring certifications, training opportunities, and industry-relevant skills. I enjoy learning, building projects, sharing my journey, and continuously improving as a developer and technology professional.",
-
-      /* Skills & Certifications (comma / pipe separated) */
-      skills_title:         "Top Skills",
-      skills_list:          "Python, C++, C, MySQL, Artificial Intelligence (AI)",
-      certifications_title: "Certifications",
-      certifications_list:  "Meritorious Scholarship Certificate - Karpagam College of Engineering|SRISHTI-VIDYUT'25 Innovation Hackathon - Karpagam College of Engineering|Certificate for the Completion of C Training - Spoken Tutorial, EduPyramids, SINE, IIT Bombay|C Programming Basics - Simplilearn|Introduction to Generative AI Studio - Simplilearn (Powered by \"Google Cloud\")|Student Learning Assessment - AICTE|Canva Design School - Canva|Artificial Intelligence - HP LIFE|HTML, CSS, JavaScript - LetsUpgrade|Power BI, AWS - Simplilearn",
-
-      /* Education (newline-separated: Name \n Degree \n Years) */
+      font_family: "system-ui",
+      font_size: 16,
+      hero_name: "Sriram G S",
+      hero_tagline: "Intern @ Infosys Springboard | IT Student @ KCE | 1350+ Problems Solved | 100+ Active Coding Days | LeetCode 1650+ | CodeChef 2\u2605 (1460+) | CodeForces 1130+",
+      hero_location: "Coimbatore, Tamil Nadu, India",
+      about_title: "Summary",
+      about_description: "As someone who pursued Computer Science as my major in higher secondary, I built a strong foundation in C++, Python, and MySQL while earning consecutive centums in Computer Science. This deepened my passion for technology and inspired me to pursue engineering. Due to my dedication and academic performance, I was awarded a merit scholarship from Karpagam College of Engineering, where I am currently pursuing a B.Tech in Information Technology.\n\nDuring my first semester, I strengthened my programming fundamentals through C. In my second semester, I expanded my knowledge into Data Structures and Algorithms, along with HTML, CSS, and JavaScript. As I enter my third semester, I am excited to continue learning and exploring technologies such as Java.\n\nAlongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1350+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.\n\nI am currently an Intern at Infosys Springboard, where I continue to gain practical exposure while exploring certifications, training opportunities, and industry-relevant skills. I enjoy learning, building projects, sharing my journey, and continuously improving as a developer and technology professional.",
+      skills_title: "Top Skills",
+      skills_list: "Python, C++, C, MySQL, Artificial Intelligence (AI)",
       education_title: "Education",
-      education_1:     "Karpagam College of Engineering\nBachelor of Technology, Information Technology\n2025 - 2029",
-      education_2:     "Sri Venkateswara Matriculation Higher Secondary School\nHSE\n2023 - 2025",
-      education_3:     "Venganar Vajram Matriculation Higher Secondary School\nSSLC\n2022 - 2023",
-
-      /* Languages (comma-separated, format: "Name (Proficiency)") */
+      education_1: "Karpagam College of Engineering\nBachelor of Technology, Information Technology\n2025 - 2029",
+      education_2: "Sri Venkateswara Matriculation Higher Secondary School\nHSE\n2023 - 2025",
+      education_3: "Venganar Vajram Matriculation Higher Secondary School\nSSLC\n2022 - 2023",
+      certifications_title: "Certifications",
+      certifications_list: "Meritorious Scholarship Certificate - Karpagam College of Engineering|SRISHTI-VIDYUT'25 Innovation Hackathon - Karpagam College of Engineering|Certificate for the Completion of C Training - Spoken Tutorial, EduPyramids, SINE, IIT Bombay|C Programming Basics - Simplilearn|Introduction to Generative AI Studio - Simplilearn (Powered by \"Google Cloud\")|Student Learning Assessment - AICTE|Canva Design School - Canva|Artificial Intelligence - HP LIFE|HTML, CSS, JavaScript - LetsUpgrade|Power BI, AWS - Simplilearn",
       languages_title: "Languages",
-      languages_list:  "Tamil (Native or Bilingual), English (Professional Working)",
-
-      /* Coding Profiles (username only — URLs built in JS) */
-      coding_profiles_title:        "Coding Profiles",
-      coding_profile_leetcode:      "gssriram",
+      languages_list: "Tamil (Native or Bilingual), English (Professional Working)",
+      coding_profiles_title: "Coding Profiles",
+      coding_profile_leetcode: "gssriram",
       coding_profile_geeksforgeeks: "gssriram",
-      coding_profile_hackerrank:    "gssriram",
-      coding_profile_codechef:      "gssriram",
-
-      /* Contact Details */
-      contact_title:     "Contact",
-      contact_address:   "Dharmapuri, Tamil Nadu, India",
-      contact_mobile:    "+91 63832 79050",
-      contact_email:     "gssriramofficial@gmail.com",
-      contact_linkedin:  "gssriramofficial",
+      coding_profile_hackerrank: "gssriram",
+      coding_profile_codechef: "gssriram",
+      contact_title: "Contact",
+      contact_address: "Dharmapuri, Tamil Nadu, India",
+      contact_mobile: "+91 63832 79050",
+      contact_email: "gssriramofficial@gmail.com",
+      contact_linkedin: "gssriramofficial",
       contact_instagram: "gssriram9050",
-      contact_x:         "gssriram9050",
-      contact_facebook:  "https://facebook.com/gssriram9050",
-      contact_github:    "gssriram9050"
+      contact_x: "gssriram9050",
+      contact_facebook: "https://facebook.com/gssriram9050",
+      contact_github: "gssriram9050"
     };
 
-
-    /* ── 3.2  Navigation ─────────────────────────────────────────
-       Switches visible page, updates nav button active states,
-       and scrolls the window back to the top.
-    ─────────────────────────────────────────────────────────────── */
     function navigateToPage(pageName) {
-      /* Hide all pages */
       document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-
-      /* Show requested page */
       const page = document.getElementById('page-' + pageName);
-      if (page) {
-        page.style.display = 'block';
-        currentPage = pageName;
-      }
-
+      if (page) { page.style.display = 'block'; currentPage = pageName; }
       updateNavButtons();
-      window.scrollTo(0, 0); /* scroll window (not main) — main is not a scroll container */
+      document.querySelector('main').scrollTop = 0;
     }
 
     function updateNavButtons() {
       const cfg = (window.elementSdk && window.elementSdk.config) ? window.elementSdk.config : defaultConfig;
       const primary = cfg.primary_action_color || defaultConfig.primary_action_color;
-      const text    = cfg.text_color           || defaultConfig.text_color;
-
+      const text = cfg.text_color || defaultConfig.text_color;
       document.querySelectorAll('.nav-btn').forEach(btn => {
         const active = btn.getAttribute('data-page') === currentPage;
         btn.classList.toggle('active', active);
-        btn.style.color           = active ? '#ffffff'     : text;
+        btn.style.color = active ? '#ffffff' : text;
         btn.style.backgroundColor = active ? primary : 'transparent';
       });
     }
 
-
-    /* ── 3.3  Rendering Helpers ──────────────────────────────────
-    ─────────────────────────────────────────────────────────────── */
-
-    /**
-     * Formats a multi-line education string into styled HTML.
-     * Expected input: "School Name\nDegree / Level\nYear Range"
-     * Line 0 → bold institution name
-     * Middle lines → normal text
-     * Last line → smaller secondary-color year range
-     */
     function formatEducation(text, baseFontSize, textColor, secondaryColor) {
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       if (!lines.length) return text;
       return lines.map((line, i) => {
-        if (i === 0)               return `<strong style="color:${textColor};font-size:${baseFontSize}px;">${line}</strong><br>`;
+        if (i === 0) return `<strong style="color:${textColor};font-size:${baseFontSize}px;">${line}</strong><br>`;
         if (i === lines.length - 1) return `<span style="color:${secondaryColor};font-size:${baseFontSize * 0.875}px;">${line}</span>`;
         return `<span style="color:${textColor};font-size:${baseFontSize}px;opacity:0.9;">${line}</span><br>`;
       }).join('');
     }
 
-    /**
-     * Attaches a click handler to a .contact-item div that opens a URL in a new tab.
-     * Used so the entire row is clickable, not just the inner <a> tag.
-     */
     function attachContactItemClickHandler(el, href) {
       if (!href) return;
       el.onclick = e => { e.preventDefault(); window.open(href, '_blank'); };
     }
 
-
-    /* ── 3.4  onConfigChange — Main Render Function ──────────────
-       Called by elementSdk when config changes (Canva editor),
-       or once on load in standalone mode with defaultConfig.
-       Applies all dynamic content and theme values to the DOM.
-    ─────────────────────────────────────────────────────────────── */
     async function onConfigChange(config) {
-
-      /* Resolve config values with fallbacks to defaultConfig */
-      const fs        = config.font_size              || defaultConfig.font_size;
-      const ff        = config.font_family            || defaultConfig.font_family;
+      const fs = config.font_size || defaultConfig.font_size;
+      const ff = config.font_family || defaultConfig.font_family;
       const fontStack = `${ff}, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
-      const bg        = config.background_color       || defaultConfig.background_color;
-      const surface   = config.surface_color          || defaultConfig.surface_color;
-      const text      = config.text_color             || defaultConfig.text_color;
-      const primary   = config.primary_action_color   || defaultConfig.primary_action_color;
+      const bg = config.background_color || defaultConfig.background_color;
+      const surface = config.surface_color || defaultConfig.surface_color;
+      const text = config.text_color || defaultConfig.text_color;
+      const primary = config.primary_action_color || defaultConfig.primary_action_color;
       const secondary = config.secondary_action_color || defaultConfig.secondary_action_color;
 
-      /* Apply background & font to body/main */
       document.body.style.backgroundColor = bg;
       const mainEl = document.querySelector('main');
       mainEl.style.backgroundColor = bg;
-      mainEl.style.color           = text;
-      mainEl.style.fontFamily      = fontStack;
-      mainEl.style.fontSize        = fs + 'px';
+      mainEl.style.color = text;
+      mainEl.style.fontFamily = fontStack;
+      mainEl.style.fontSize = fs + 'px';
 
-      /* Navbar */
       const navbar = document.getElementById('navbar');
       navbar.style.backgroundColor = surface;
-      navbar.style.borderColor     = secondary + '40';
+      navbar.style.borderColor = secondary + '40';
 
-      /* Nav buttons */
       document.querySelectorAll('.nav-btn').forEach(btn => {
         const active = btn.getAttribute('data-page') === currentPage;
         btn.classList.toggle('active', active);
-        btn.style.color           = active ? '#ffffff' : text;
+        btn.style.color = active ? '#ffffff' : text;
         btn.style.backgroundColor = active ? primary : 'transparent';
-        btn.style.fontFamily      = fontStack;
-        btn.style.fontSize        = fs + 'px';
+        btn.style.fontFamily = fontStack;
+        btn.style.fontSize = fs + 'px';
       });
 
-      /* Section card backgrounds */
       document.querySelectorAll('.section-card').forEach(card => {
         card.style.backgroundColor = surface;
       });
 
-      /* Page titles */
       document.querySelectorAll('.page-title').forEach(t => {
         t.style.fontSize = (fs * 2) + 'px';
-        t.style.color    = text;
+        t.style.color = text;
       });
 
-      /* ── Hero Section ── */
+      // Hero
       const heroName = document.getElementById('hero-name');
       if (heroName) {
-        heroName.textContent  = config.hero_name || defaultConfig.hero_name;
+        heroName.textContent = config.hero_name || defaultConfig.hero_name;
         heroName.style.fontSize = (fs * 2.5) + 'px';
-        heroName.style.color    = text;
+        heroName.style.color = text;
       }
 
       const heroTagline = document.getElementById('hero-tagline');
       if (heroTagline) {
-        heroTagline.textContent  = config.hero_tagline || defaultConfig.hero_tagline;
+        heroTagline.textContent = config.hero_tagline || defaultConfig.hero_tagline;
         heroTagline.style.fontSize = (fs * 1.125) + 'px';
-        heroTagline.style.color    = secondary;
+        heroTagline.style.color = secondary;
       }
 
       const heroLocationItem = document.getElementById('hero-location-item');
       if (heroLocationItem) {
         const loc = config.hero_location || defaultConfig.hero_location;
         document.getElementById('hero-location-text').textContent = loc;
-        heroLocationItem.onclick    = () => window.open('https://maps.google.com/?q=' + encodeURIComponent(loc), '_blank');
-        heroLocationItem.style.color    = primary;
+        heroLocationItem.onclick = () => window.open('https://maps.google.com/?q=' + encodeURIComponent(loc), '_blank');
+        heroLocationItem.style.color = primary;
         heroLocationItem.style.fontSize = fs + 'px';
       }
 
-      /* ── About Section ── */
+      // About
       const aboutTitle = document.getElementById('about-title');
       if (aboutTitle) {
-        aboutTitle.textContent  = config.about_title || defaultConfig.about_title;
+        aboutTitle.textContent = config.about_title || defaultConfig.about_title;
         aboutTitle.style.fontSize = (fs * 1.5) + 'px';
-        aboutTitle.style.color    = text;
+        aboutTitle.style.color = text;
       }
       const aboutDesc = document.getElementById('about-description');
       if (aboutDesc) {
-        aboutDesc.textContent  = config.about_description || defaultConfig.about_description;
+        aboutDesc.textContent = config.about_description || defaultConfig.about_description;
         aboutDesc.style.fontSize = fs + 'px';
-        aboutDesc.style.color    = text;
+        aboutDesc.style.color = text;
       }
 
-      /* ── Skills Section ── */
+      // Skills
       const skillsTitle = document.getElementById('skills-title');
-      if (skillsTitle) {
-        skillsTitle.style.color    = text;
-        skillsTitle.style.fontSize = (fs * 1.5) + 'px';
-      }
+      if (skillsTitle) { skillsTitle.style.color = text; skillsTitle.style.fontSize = (fs * 1.5) + 'px'; }
+      const skillsList = config.skills_list || defaultConfig.skills_list;
       const skillsContainer = document.getElementById('skills-container');
       if (skillsContainer) {
         skillsContainer.innerHTML = '';
-        (config.skills_list || defaultConfig.skills_list)
-          .split(',').map(s => s.trim()).forEach(skill => {
-            const badge = document.createElement('span');
-            badge.className       = 'skill-badge px-4 py-2 rounded-full font-medium';
-            badge.textContent     = skill;
-            badge.style.backgroundColor = primary + '20';
-            badge.style.color           = primary;
-            badge.style.fontSize        = (fs * 0.875) + 'px';
-            badge.style.border          = '1px solid ' + primary + '40';
-            skillsContainer.appendChild(badge);
-          });
+        skillsList.split(',').map(s => s.trim()).forEach(skill => {
+          const badge = document.createElement('span');
+          badge.className = 'skill-badge px-4 py-2 rounded-full font-medium';
+          badge.textContent = skill;
+          badge.style.backgroundColor = primary + '20';
+          badge.style.color = primary;
+          badge.style.fontSize = (fs * 0.875) + 'px';
+          badge.style.border = '1px solid ' + primary + '40';
+          skillsContainer.appendChild(badge);
+        });
       }
 
-      /* ── Education Section ── */
-      ['1', '2', '3'].forEach(n => {
+      // Education
+      ['1','2','3'].forEach(n => {
         const el = document.getElementById('education-' + n);
-        if (el) el.innerHTML = formatEducation(
-          config['education_' + n] || defaultConfig['education_' + n],
-          fs, text, secondary
-        );
+        if (el) el.innerHTML = formatEducation(config['education_' + n] || defaultConfig['education_' + n], fs, text, secondary);
       });
 
-      /* ── Certifications Section ── */
+      // Certifications
       const certsTitle = document.getElementById('certifications-title');
-      if (certsTitle) {
-        certsTitle.style.color    = text;
-        certsTitle.style.fontSize = (fs * 1.5) + 'px';
-      }
+      if (certsTitle) { certsTitle.style.color = text; certsTitle.style.fontSize = (fs * 1.5) + 'px'; }
+      const certsList = config.certifications_list || defaultConfig.certifications_list;
       const certsContainer = document.getElementById('certifications-list');
       if (certsContainer) {
         certsContainer.innerHTML = '';
-        (config.certifications_list || defaultConfig.certifications_list)
-          .split('|').map(s => s.trim()).forEach(cert => {
-            const li = document.createElement('li');
-            li.className = 'cert-item flex items-start gap-2';
-            li.innerHTML = `<span style="color:${primary};font-weight:bold;">&#10003;</span><span>${cert}</span>`;
-            li.style.fontSize = fs + 'px';
-            li.style.color    = text;
-            certsContainer.appendChild(li);
-          });
+        certsList.split('|').map(s => s.trim()).forEach(cert => {
+          const li = document.createElement('li');
+          li.className = 'cert-item flex items-start gap-2';
+          li.innerHTML = `<span style="color:${primary};font-weight:bold;">&#10003;</span><span>${cert}</span>`;
+          li.style.fontSize = fs + 'px';
+          li.style.color = text;
+          certsContainer.appendChild(li);
+        });
       }
 
-      /* ── Languages Section ── */
+      // Languages
       const langTitle = document.getElementById('languages-title');
-      if (langTitle) {
-        langTitle.style.color    = text;
-        langTitle.style.fontSize = (fs * 1.5) + 'px';
-      }
+      if (langTitle) { langTitle.style.color = text; langTitle.style.fontSize = (fs * 1.5) + 'px'; }
+      const langList = config.languages_list || defaultConfig.languages_list;
       const langContainer = document.getElementById('languages-container');
       if (langContainer) {
         langContainer.innerHTML = '';
-        (config.languages_list || defaultConfig.languages_list)
-          .split(',').map(s => s.trim()).forEach(lang => {
-            const p = document.createElement('p');
-            p.className = 'lang-item';
-            /* Support both "Name (Proficiency)" and "Name - Proficiency" formats */
-            const parenMatch = lang.match(/^(.+?)\s*\((.+)\)$/);
-            const parts      = lang.split('-').map(s => s.trim());
-            if (parenMatch) {
-              p.innerHTML = `<strong>${parenMatch[1].trim()}</strong> - ${parenMatch[2].trim()}`;
-            } else if (parts.length >= 2) {
-              p.innerHTML = `<strong>${parts[0]}</strong> - ${parts.slice(1).join('-').trim()}`;
-            } else {
-              p.innerHTML = `<strong>${lang}</strong>`;
-            }
-            p.style.fontSize = fs + 'px';
-            p.style.color    = text;
-            langContainer.appendChild(p);
-          });
+        langList.split(',').map(s => s.trim()).forEach(lang => {
+          const p = document.createElement('p');
+          p.className = 'lang-item';
+          const parenMatch = lang.match(/^(.+?)\s*\((.+)\)$/);
+          const parts = lang.split('-').map(s => s.trim());
+          if (parenMatch) {
+            p.innerHTML = `<strong>${parenMatch[1].trim()}</strong> - ${parenMatch[2].trim()}`;
+          } else if (parts.length >= 2) {
+            p.innerHTML = `<strong>${parts[0]}</strong> - ${parts.slice(1).join('-').trim()}`;
+          } else {
+            p.innerHTML = `<strong>${lang}</strong>`;
+          }
+          p.style.fontSize = fs + 'px';
+          p.style.color = text;
+          langContainer.appendChild(p);
+        });
       }
 
-      /* ── Coding Profiles Section ── */
+      // Coding Profiles title
       const cpTitle = document.getElementById('coding_profiles_title');
-      if (cpTitle) {
-        cpTitle.style.color    = text;
-        cpTitle.style.fontSize = (fs * 1.5) + 'px';
+      if (cpTitle) { cpTitle.style.color = text; cpTitle.style.fontSize = (fs * 1.5) + 'px'; }
+
+      // Coding profile links
+      const lcLink = document.getElementById('coding-profile-leetcode-link');
+      if (lcLink) {
+        const u = config.coding_profile_leetcode || defaultConfig.coding_profile_leetcode;
+        lcLink.href = 'https://leetcode.com/u/' + u;
+        lcLink.style.color = primary; lcLink.style.fontSize = fs + 'px';
+        attachContactItemClickHandler(lcLink.closest('.contact-item'), lcLink.href);
+      }
+      const ggLink = document.getElementById('coding-profile-geeksforgeeks-link');
+      if (ggLink) {
+        const u = config.coding_profile_geeksforgeeks || defaultConfig.coding_profile_geeksforgeeks;
+        ggLink.href = 'https://geeksforgeeks.org/profile/' + u;
+        ggLink.style.color = primary; ggLink.style.fontSize = fs + 'px';
+        attachContactItemClickHandler(ggLink.closest('.contact-item'), ggLink.href);
+      }
+      const hrLink = document.getElementById('coding-profile-hackerrank-link');
+      if (hrLink) {
+        const u = config.coding_profile_hackerrank || defaultConfig.coding_profile_hackerrank;
+        hrLink.href = 'https://hackerrank.com/profile/' + u;
+        hrLink.style.color = primary; hrLink.style.fontSize = fs + 'px';
+        attachContactItemClickHandler(hrLink.closest('.contact-item'), hrLink.href);
+      }
+      const ccLink = document.getElementById('coding-profile-codechef-link');
+      if (ccLink) {
+        const u = config.coding_profile_codechef || defaultConfig.coding_profile_codechef;
+        ccLink.href = 'https://codechef.com/users/' + u;
+        ccLink.style.color = primary; ccLink.style.fontSize = fs + 'px';
+        attachContactItemClickHandler(ccLink.closest('.contact-item'), ccLink.href);
       }
 
-      /* Helper to update each coding profile link */
-      const setProfileLink = (elId, baseUrl, username) => {
-        const el = document.getElementById(elId);
-        if (!el) return;
-        el.href       = baseUrl + username;
-        el.style.color    = primary;
-        el.style.fontSize = fs + 'px';
-        attachContactItemClickHandler(el.closest('.contact-item'), el.href);
-      };
-
-      setProfileLink('coding-profile-leetcode-link',
-        'https://leetcode.com/u/',
-        config.coding_profile_leetcode || defaultConfig.coding_profile_leetcode);
-
-      setProfileLink('coding-profile-geeksforgeeks-link',
-        'https://geeksforgeeks.org/profile/',
-        config.coding_profile_geeksforgeeks || defaultConfig.coding_profile_geeksforgeeks);
-
-      setProfileLink('coding-profile-hackerrank-link',
-        'https://hackerrank.com/profile/',
-        config.coding_profile_hackerrank || defaultConfig.coding_profile_hackerrank);
-
-      setProfileLink('coding-profile-codechef-link',
-        'https://codechef.com/users/',
-        config.coding_profile_codechef || defaultConfig.coding_profile_codechef);
-
-      /* ── Contact Section ── */
-
-      /* Address */
+      // Contact section
       const addrItem = document.getElementById('contact-address-item');
       if (addrItem) {
         const addr = config.contact_address || defaultConfig.contact_address;
         document.getElementById('contact-address-text').textContent = addr;
-        addrItem.onclick        = () => window.open('https://maps.google.com/?q=' + encodeURIComponent(addr), '_blank');
-        addrItem.style.color    = primary;
-        addrItem.style.fontSize = fs + 'px';
+        addrItem.onclick = () => window.open('https://maps.google.com/?q=' + encodeURIComponent(addr), '_blank');
+        addrItem.style.color = primary; addrItem.style.fontSize = fs + 'px';
       }
-
-      /* Phone */
       const cMobile = document.getElementById('contact-mobile');
       if (cMobile) {
         const m = config.contact_mobile || defaultConfig.contact_mobile;
-        cMobile.textContent  = m;
-        cMobile.href         = 'tel:' + m.replace(/\s/g, '');
-        cMobile.style.color    = primary;
-        cMobile.style.fontSize = fs + 'px';
+        cMobile.textContent = m;
+        cMobile.href = 'tel:' + m.replace(/\s/g,'');
+        cMobile.style.color = primary; cMobile.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cMobile.closest('.contact-item'), cMobile.href);
       }
-
-      /* Email */
       const cEmail = document.getElementById('contact-email');
       if (cEmail) {
         const e = config.contact_email || defaultConfig.contact_email;
-        cEmail.textContent  = e;
-        cEmail.href         = 'mailto:' + e;
-        cEmail.style.color    = primary;
-        cEmail.style.fontSize = fs + 'px';
+        cEmail.textContent = e;
+        cEmail.href = 'mailto:' + e;
+        cEmail.style.color = primary; cEmail.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cEmail.closest('.contact-item'), cEmail.href);
       }
-
-      /* LinkedIn */
       const cLinkedin = document.getElementById('contact-linkedin');
       if (cLinkedin) {
         const u = config.contact_linkedin || defaultConfig.contact_linkedin;
-        cLinkedin.textContent  = 'linkedin.com/in/' + u;
-        cLinkedin.href         = 'https://linkedin.com/in/' + u;
-        cLinkedin.style.color    = primary;
-        cLinkedin.style.fontSize = fs + 'px';
+        cLinkedin.textContent = 'linkedin.com/in/' + u;
+        cLinkedin.href = 'https://linkedin.com/in/' + u;
+        cLinkedin.style.color = primary; cLinkedin.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cLinkedin.closest('.contact-item'), cLinkedin.href);
       }
-
-      /* GitHub */
       const cGithub = document.getElementById('contact-github');
       if (cGithub) {
         const u = config.contact_github || defaultConfig.contact_github;
-        cGithub.textContent  = 'github.com/' + u;
-        cGithub.href         = 'https://github.com/' + u;
-        cGithub.style.color    = primary;
-        cGithub.style.fontSize = fs + 'px';
+        cGithub.textContent = 'github.com/' + u;
+        cGithub.href = 'https://github.com/' + u;
+        cGithub.style.color = primary; cGithub.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cGithub.closest('.contact-item'), cGithub.href);
       }
-
-      /* Facebook */
       const cFacebook = document.getElementById('contact-facebook');
       if (cFacebook) {
         const url = config.contact_facebook || defaultConfig.contact_facebook;
-        cFacebook.textContent  = 'facebook.com/gssriram9050';
-        cFacebook.href         = url;
-        cFacebook.style.color    = primary;
-        cFacebook.style.fontSize = fs + 'px';
+        cFacebook.textContent = 'facebook.com/gssriram9050';
+        cFacebook.href = url;
+        cFacebook.style.color = primary; cFacebook.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cFacebook.closest('.contact-item'), url);
       }
-
-      /* Instagram */
       const cInstagram = document.getElementById('contact-instagram');
       if (cInstagram) {
         const u = config.contact_instagram || defaultConfig.contact_instagram;
-        cInstagram.textContent  = 'instagram.com/' + u;
-        cInstagram.href         = 'https://instagram.com/' + u;
-        cInstagram.style.color    = primary;
-        cInstagram.style.fontSize = fs + 'px';
+        cInstagram.textContent = 'instagram.com/' + u;
+        cInstagram.href = 'https://instagram.com/' + u;
+        cInstagram.style.color = primary; cInstagram.style.fontSize = fs + 'px';
         attachContactItemClickHandler(cInstagram.closest('.contact-item'), cInstagram.href);
       }
+      const cX = document.getElementById('contact-x');
+      if (cX) {
+        const u = config.contact_x || defaultConfig.contact_x;
+        cX.textContent = 'x.com/' + u;
+        cX.href = 'https://x.com/' + u;
+        cX.style.color = primary; cX.style.fontSize = fs + 'px';
+        attachContactItemClickHandler(cX.closest('.contact-item'), cX.href);
+      }
 
-      /* X (Twitter) */
-      const cX = docu
+      const resumeBtn = document.getElementById('resume-button');
+      if (resumeBtn) {
+        resumeBtn.style.background = `linear-gradient(135deg, ${primary} 0%, #2563eb 100%)`;
+        resumeBtn.style.fontSize = (fs * 0.875) + 'px';
+        resumeBtn.style.fontFamily = fontStack;
+      }
+
+      const footer = document.getElementById('footer');
+      if (footer) {
+        footer.style.backgroundColor = surface;
+        footer.style.borderColor = secondary + '40';
+      }
+      const footerText = document.getElementById('footer-text');
+      if (footerText) {
+        footerText.style.color = secondary;
+        footerText.style.fontSize = (fs * 0.8125) + 'px';
+        footerText.style.fontFamily = fontStack;
+      }
+    }
+
+    // Contact form handling
+    function handleContactFormSubmit() {
+      clearAllErrors();
+      const name = document.getElementById('form-name').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+      const subject = document.getElementById('form-subject').value.trim();
+      const message = document.getElementById('form-message').value.trim();
+      let valid = true;
+
+      if (!name || name.length < 2) { showFieldError('form-name', name ? 'Name must be at least 2 characters' : 'Please enter your full name'); valid = false; }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email) { showFieldError('form-email', 'Please enter your email address'); valid = false; }
+      else if (!emailRegex.test(email)) { showFieldError('form-email', 'Please enter a valid email address (e.g., name@example.com)'); valid = false; }
+      if (!subject) { showFieldError('form-subject', 'Please enter a subject line'); valid = false; }
+      if (!message) { showFieldError('form-message', 'Please enter your message'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('form-submit-btn');
+      const statusDiv = document.getElementById('form-status');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      btn.style.opacity = '0.7';
+      statusDiv.style.display = 'none';
+
+      const formData = { name, email, subject, message, source: 'portfolio_contact_form', received_at: new Date().toISOString() };
+
+      const doSave = async () => {
+        if (window.dataSdk) {
+          const result = await window.dataSdk.create(formData);
+          return result.isOk;
+        }
+        // Fallback: open mailto
+        window.location.href = `mailto:gssriramofficial@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message)}`;
+        return true;
+      };
+
+      doSave().then(ok => {
+        if (ok) {
+          statusDiv.style.backgroundColor = 'rgba(34,197,94,0.15)';
+          statusDiv.style.color = '#22c55e';
+          statusDiv.style.borderColor = '#22c55e';
+          statusDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">&#10003;</span><div style="text-align:left;"><div style="font-weight:600;margin-bottom:2px;">Message Received Successfully!</div><div style="font-size:0.875rem;opacity:0.9;">I'll get back to you within 24–48 hours at <strong>${email}</strong></div></div></div>`;
+          statusDiv.style.display = 'block';
+          ['form-name','form-email','form-subject','form-message'].forEach(id => { document.getElementById(id).value = ''; });
+          clearAllErrors();
+          setTimeout(() => { statusDiv.style.display = 'none'; }, 6000);
+        } else {
+          statusDiv.style.backgroundColor = 'rgba(239,68,68,0.15)';
+          statusDiv.style.color = '#ef4444';
+          statusDiv.style.borderColor = '#ef4444';
+          statusDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">&#10005;</span><div style="text-align:left;"><div style="font-weight:600;margin-bottom:2px;">Unable to Send Message</div><div style="font-size:0.875rem;opacity:0.9;">Please try again or email me directly</div></div></div>`;
+          statusDiv.style.display = 'block';
+        }
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        btn.style.opacity = '1';
+      }).catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        btn.style.opacity = '1';
+      });
+    }
+
+    function showFieldError(fieldId, msg) {
+      const field = document.getElementById(fieldId);
+      const errDiv = document.getElementById(fieldId + '-error');
+      field.style.borderColor = '#ef4444';
+      field.style.backgroundColor = 'rgba(239,68,68,0.08)';
+      errDiv.textContent = msg;
+      errDiv.style.display = 'block';
+      field.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      field.addEventListener('input', function onInput() {
+        if (field.value.trim()) {
+          field.style.borderColor = '#22c55e';
+          field.style.backgroundColor = 'rgba(34,197,94,0.08)';
+          errDiv.style.display = 'none';
+          field.removeEventListener('input', onInput);
+        }
+      });
+    }
+
+    function clearAllErrors() {
+      ['form-name','form-email','form-subject','form-message'].forEach(id => {
+        const f = document.getElementById(id);
+        const e = document.getElementById(id + '-error');
+        f.style.borderColor = '#6b7280';
+        f.style.backgroundColor = 'rgba(107,114,128,0.1)';
+        e.style.display = 'none';
+        e.textContent = '';
+      });
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          { get: () => config.background_color || defaultConfig.background_color, set: v => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+          { get: () => config.surface_color || defaultConfig.surface_color, set: v => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+          { get: () => config.text_color || defaultConfig.text_color, set: v => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+          { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: v => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); } },
+          { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: v => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); } }
+        ],
+        borderables: [],
+        fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: v => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+        fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: v => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["hero_name", config.hero_name || defaultConfig.hero_name],
+        ["hero_tagline", config.hero_tagline || defaultConfig.hero_tagline],
+        ["hero_location", config.hero_location || defaultConfig.hero_location],
+        ["about_title", config.about_title || defaultConfig.about_title],
+        ["about_description", config.about_description || defaultConfig.about_description],
+        ["skills_title", config.skills_title || defaultConfig.skills_title],
+        ["skills_list", config.skills_list || defaultConfig.skills_list],
+        ["education_title", config.education_title || defaultConfig.education_title],
+        ["education_1", config.education_1 || defaultConfig.education_1],
+        ["education_2", config.education_2 || defaultConfig.education_2],
+        ["education_3", config.education_3 || defaultConfig.education_3],
+        ["certifications_title", config.certifications_title || defaultConfig.certifications_title],
+        ["certifications_list", config.certifications_list || defaultConfig.certifications_list],
+        ["languages_title", config.languages_title || defaultConfig.languages_title],
+        ["languages_list", config.languages_list || defaultConfig.languages_list],
+        ["coding_profiles_title", config.coding_profiles_title || defaultConfig.coding_profiles_title],
+        ["coding_profile_leetcode", config.coding_profile_leetcode || defaultConfig.coding_profile_leetcode],
+        ["coding_profile_geeksforgeeks", config.coding_profile_geeksforgeeks || defaultConfig.coding_profile_geeksforgeeks],
+        ["coding_profile_hackerrank", config.coding_profile_hackerrank || defaultConfig.coding_profile_hackerrank],
+        ["coding_profile_codechef", config.coding_profile_codechef || defaultConfig.coding_profile_codechef],
+        ["contact_title", config.contact_title || defaultConfig.contact_title],
+        ["contact_address", config.contact_address || defaultConfig.contact_address],
+        ["contact_mobile", config.contact_mobile || defaultConfig.contact_mobile],
+        ["contact_email", config.contact_email || defaultConfig.contact_email],
+        ["contact_linkedin", config.contact_linkedin || defaultConfig.contact_linkedin],
+        ["contact_instagram", config.contact_instagram || defaultConfig.contact_instagram],
+        ["contact_x", config.contact_x || defaultConfig.contact_x],
+        ["contact_facebook", config.contact_facebook || defaultConfig.contact_facebook],
+        ["contact_github", config.contact_github || defaultConfig.contact_github]
+      ]);
+    }
+
+    // Initialize SDK if present, otherwise use defaultConfig directly
+    if (window.elementSdk) {
+      window.elementSdk.init({ defaultConfig, onConfigChange, mapToCapabilities, mapToEditPanelValues });
+    } else {
+      onConfigChange(defaultConfig);
+    }
+
+    if (window.dataSdk) {
+      window.dataSdk.init({ onDataChanged(data) {} });
+    }
+
+    document.getElementById('hero-location-item').onclick = () => {
+      window.open('https://maps.google.com/?q=' + encodeURIComponent(defaultConfig.hero_location), '_blank');
+    };
+    document.getElementById('contact-address-item').onclick = () => {
+      window.open('https://maps.google.com/?q=' + encodeURIComponent(defaultConfig.contact_address), '_blank');
+    };
+  </script>
+</body>
+</html>
