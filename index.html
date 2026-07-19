@@ -217,12 +217,12 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
-    .edu-item, .cert-item, .lang-item {
+    .edu-item, .cert-item, .lang-item, .exp-item, .achievement-item {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       padding: 8px;
       border-radius: 8px;
     }
-    .edu-item:hover, .cert-item:hover, .lang-item:hover {
+    .edu-item:hover, .cert-item:hover, .lang-item:hover, .exp-item:hover, .achievement-item:hover {
       background-color: rgba(59, 130, 246, 0.05);
       transform: translateY(-2px) scale(1.02);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
@@ -241,6 +241,352 @@
     }
 
     main { scroll-behavior: smooth; background-color: #0a0a0a; }
+
+    /* ============================================================ */
+    /* THEME TOKENS (CSS custom properties)                          */
+    /* Mirrors the config object already driven by onConfigChange()  */
+    /* below, so the Certificates section instantly inherits         */
+    /* light/dark mode + brand color changes without any new logic.  */
+    /* onConfigChange() also writes to these vars — see script.      */
+    /* ============================================================ */
+    :root {
+      --bg: #0a0a0a;
+      --surface: #1a1a1a;
+      --text: #e5e5e5;
+      --text-secondary: #6b7280;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --border: rgba(107, 114, 128, 0.12);
+      --radius-sm: 8px;
+      --radius-lg: 1rem;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ============================================================ */
+    /* CERTIFICATES SECTION                                          */
+    /* Tiered grid ("Government & Major Company Credentials" /            */
+    /* "Professional & Technical Credentials" / "Additional Skills" /      */
+    /* "Other Certificates") plus a native modal preview. Every card,      */
+    /* header, and the modal share the site's single blue accent           */
+    /* (var(--primary)) — priority is communicated by section order and    */
+    /* grouping, not by color. Everything reads var(--...) tokens so it    */
+    /* tracks the rest of the site's theme automatically.                  */
+    /* ============================================================ */
+    .cert-tier { margin-bottom: 3rem; }
+    .cert-tier:last-child { margin-bottom: 0; }
+
+    .cert-tier-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--tier-accent, var(--border));
+    }
+    .cert-tier-header .cert-tier-icon { font-size: 1.25rem; line-height: 1; }
+    .cert-tier-header h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--tier-accent, var(--text));
+      margin: 0;
+    }
+    .cert-tier-header span.cert-tier-sub {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .cert-org-group { margin-bottom: 1.75rem; }
+    .cert-org-group:last-child { margin-bottom: 0; }
+    .cert-org-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--tier-accent, var(--primary));
+      margin: 0 0 0.75rem 2px;
+      opacity: 0.9;
+    }
+
+    /* --- Grid: identical column sizing for every tier, so card size --- */
+    /* never changes with priority — only order + grouping do.        --- */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    /* --- Card: one fixed rectangular footprint for every credential, --- */
+    /* every tier included — no square/badge variant, no shape label.  --- */
+    /* min-height (not aspect-ratio) so long names wrap instead of     --- */
+    /* being clipped. Entire card is the clickable surface, always in  --- */
+    /* the site's one blue accent (--tier-accent is never set, so      --- */
+    /* every var(--tier-accent, var(--primary)) below resolves to      --- */
+    /* var(--primary) — kept as a fallback chain in case per-tier      --- */
+    /* accents are wanted again later).                                --- */
+    .cert-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 148px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--tier-accent, var(--primary));
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cert-card:hover {
+      transform: translateY(-4px) scale(1.015);
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.18);
+      box-shadow: 0 16px 32px color-mix(in srgb, var(--tier-accent, var(--primary)) 28%, transparent);
+      border-color: var(--tier-accent, var(--primary));
+    }
+    .cert-card:active { transform: translateY(-1px) scale(1.005); }
+
+    .cert-card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .cert-card-name {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 0.9375rem;
+      line-height: 1.35;
+      margin: 0 0 4px 0;
+      overflow-wrap: break-word;
+    }
+
+    .cert-card-meta {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* --- Modal preview --- */
+    .cert-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .cert-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .cert-modal {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cert-modal-overlay.open .cert-modal { transform: translateY(0) scale(1); }
+
+    .cert-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .cert-modal-close:hover {
+      background-color: var(--primary);
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    /* Designed certificate visual — pure CSS, no network request. Works    */
+    /* identically online, offline, or opened straight from disk, which a   */
+    /* live screenshot service never could.                                */
+    .cert-modal-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.7 / 1;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Certificate-style inset border frame */
+    .cert-modal-preview::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+    /* Faint corner-radial texture so the panel doesn't read as flat */
+    .cert-modal-preview::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.16) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.12) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .cert-modal-preview-eyebrow {
+      position: absolute;
+      top: 22px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.625rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 700;
+      z-index: 1;
+    }
+    .cert-modal-preview-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 0 28px;
+      text-align: center;
+    }
+    .cert-modal-preview-seal {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      border: 2px solid rgba(255, 255, 255, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+    .cert-modal-preview-org-name {
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.0625rem;
+      line-height: 1.25;
+    }
+    .cert-modal-preview-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 5px 10px;
+      border-radius: 999px;
+      transition: var(--transition);
+    }
+    .cert-modal-preview:hover .cert-modal-preview-hint {
+      background: rgba(0, 0, 0, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .cert-modal-body { padding: 22px; }
+    .cert-modal-body h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px 0;
+    }
+    .cert-modal-org {
+      font-size: 0.9375rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin: 0 0 14px 0;
+    }
+    .cert-modal-details {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+    .cert-modal-details span strong { color: var(--text); font-weight: 600; }
+
+    .cert-modal-verify-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    .cert-modal-verify-btn:hover {
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+      opacity: 1;
+    }
+    .cert-modal-verify-btn:active { transform: translateY(0); }
+
+    body.cert-modal-locked { overflow: hidden; }
+
+    @media (max-width: 640px) {
+      .cert-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Larger displays: keep the nav on a single centered line instead   */
+    /* of wrapping to two rows. Only the navbar widens — the rest of the */
+    /* site keeps its original, more readable content width.            */
+    @media (min-width: 1200px) {
+      #navbar .max-w-4xl { max-width: 78rem; }
+      #navbar .flex.justify-center {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        gap: 0.375rem;
+      }
+      #navbar .nav-btn {
+        padding-left: 0.85rem;
+        padding-right: 0.85rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -254,8 +600,13 @@
     <div class="max-w-4xl mx-auto px-6 py-4">
       <div class="flex justify-center gap-2 flex-wrap">
         <button onclick="navigateToPage('home')" class="nav-btn px-4 py-2 rounded-lg font-medium active" data-page="home" style="background-color:#3b82f6;color:#fff;">About Me</button>
-        <button onclick="navigateToPage('education')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="education" style="background-color:transparent;color:#e5e5e5;">Education &amp; Languages</button>
-        <button onclick="navigateToPage('skills')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="skills" style="background-color:transparent;color:#e5e5e5;">Skills &amp; Certifications</button>
+        <button onclick="navigateToPage('education')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="education" style="background-color:transparent;color:#e5e5e5;">Education</button>
+        <button onclick="navigateToPage('skills')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="skills" style="background-color:transparent;color:#e5e5e5;">Skills</button>
+        <button onclick="navigateToPage('projects')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="projects" style="background-color:transparent;color:#e5e5e5;">Projects</button>
+        <button onclick="navigateToPage('technical-profiles')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="technical-profiles" style="background-color:transparent;color:#e5e5e5;">Technical Profiles</button>
+        <button onclick="navigateToPage('work-experience')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="work-experience" style="background-color:transparent;color:#e5e5e5;">Experience</button>
+        <button onclick="navigateToPage('certifications-detail')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="certifications-detail" style="background-color:transparent;color:#e5e5e5;">Certificates</button>
+        <button onclick="navigateToPage('achievements')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="achievements" style="background-color:transparent;color:#e5e5e5;">Achievements</button>
         <button onclick="navigateToPage('contact')" class="nav-btn px-4 py-2 rounded-lg font-medium" data-page="contact" style="background-color:transparent;color:#e5e5e5;">Contact</button>
       </div>
     </div>
@@ -281,7 +632,7 @@
             </div>
             <div>
               <h1 id="hero-name" class="mb-3 font-bold interactive-text" style="font-size:2.5rem;color:#e5e5e5;">Sriram G S</h1>
-              <p id="hero-tagline" class="mb-3 interactive-text" style="font-size:1.125rem;color:#6b7280;">Intern @ Infosys Springboard | IT Student @ KCE | 1500+ Problems Solved | 110+ Active Coding Days | 80+ Days Current Streak | 50+ Contests | LeetCode 1750+ | CodeChef 2&#9733; | Codeforces Pupil | Code360 Achiever</p>
+              <p id="hero-tagline" class="mb-3 interactive-text" style="font-size:1.125rem;color:#6b7280;">Intern @ Infosys Springboard | IT Student @ KCE | 1770+ Problems Solved | 140+ Active Coding Days | 110+ Days Current Streak | 75 Contests | LeetCode 1800+ | CodeChef 3&#9733; | Codeforces Pupil | Code360 Specialist</p>
               <div id="hero-location-item" class="location-item inline-flex items-center justify-center gap-2 px-4 py-2" style="color:#3b82f6;cursor:pointer;">
                 <span>&#128205;</span>
                 <span id="hero-location-text">Coimbatore, Tamil Nadu, India</span>
@@ -313,7 +664,7 @@
 
 During my first semester, I strengthened my programming fundamentals through C. In my second semester, I expanded my knowledge into Data Structures and Algorithms, along with HTML, CSS, and JavaScript. As I enter my third semester, I am excited to continue learning and exploring technologies such as Java.
 
-Alongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1350+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.
+Alongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1770+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.
 
 I am currently an Intern at Infosys Springboard, where I continue to gain practical exposure while exploring certifications, training opportunities, and industry-relevant skills. I enjoy learning, building projects, sharing my journey, and continuously improving as a developer and technology professional.</p>
         </section>
@@ -325,7 +676,7 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
       <!-- default (display:none); toggled via nav.                     -->
       <!-- ============================================================ -->
       <div id="page-education" class="page-content" style="display:none;">
-        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Education &amp; Languages</h1>
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Education</h1>
         <section class="section-card rounded-lg p-6 mb-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
           <h2 class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Education</h2>
           <div class="space-y-6">
@@ -348,12 +699,8 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
               </div>
             </div>
           </div>
-        </section>
-        <section class="section-card rounded-lg p-6 text-center" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
-          <h2 id="languages-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Languages</h2>
-          <div id="languages-container" class="space-y-2">
-            <p class="lang-item" style="font-size:16px;color:#e5e5e5;"><strong>Tamil</strong> - Native or Bilingual</p>
-            <p class="lang-item" style="font-size:16px;color:#e5e5e5;"><strong>English</strong> - Professional Working</p>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.linkedin.com/in/gssriramofficial/details/education/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
           </div>
         </section>
       </div>
@@ -365,60 +712,288 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
       <!-- Hidden by default; toggled via nav.                          -->
       <!-- ============================================================ -->
       <div id="page-skills" class="page-content" style="display:none;">
-        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Skills &amp; Certifications</h1>
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Skills</h1>
         <section class="mb-10 section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
           <h2 id="skills-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Top Skills</h2>
           <div id="skills-container" class="flex flex-wrap gap-3">
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Data Structures and Algorithms (DSA)</span>
             <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Python</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">JavaScript</span>
             <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">C++</span>
             <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">C</span>
-            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">MySQL</span>
-            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Artificial Intelligence (AI)</span>
           </div>
         </section>
         <section class="mb-10 section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
-          <h2 id="certifications-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Certifications</h2>
-          <ul id="certifications-list" class="space-y-2"></ul>
+          <h2 id="basic-skills-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Skills</h2>
+          <div id="basic-skills-container" class="flex flex-wrap gap-3">
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Java</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">SQL</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">HTML</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">CSS</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Bootstrap</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">MySQL</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">MongoDB</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Oracle</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Graph Algorithms</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Object-Oriented Programming</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Problem Solving</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">AWS</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Git</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">GitHub</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">VS Code</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Artificial Intelligence</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Prompt Engineering</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Data Science</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Pandas</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Power BI</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Figma</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Canva</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Graphic Design</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Embedded Systems</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Arduino</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Internet of Things (IoT)</span>
+            <span class="skill-badge px-4 py-2 rounded-full font-medium" style="background-color:#3b82f620;color:#3b82f6;font-size:14px;border:1px solid #3b82f640;">Cybersecurity</span>
+          </div>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.linkedin.com/in/gssriramofficial/details/skills/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
+          </div>
         </section>
+        <section class="mb-10 section-card rounded-lg p-6 text-center" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 id="languages-title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Languages</h2>
+          <div id="languages-container" class="space-y-2">
+            <p class="lang-item" style="font-size:16px;color:#e5e5e5;"><strong>Tamil</strong> - Native or Bilingual</p>
+            <div class="lang-item flex items-center justify-center gap-2 flex-wrap" style="font-size:16px;color:#e5e5e5;">
+              <span><strong>English</strong> - Professional Working &middot; Duolingo Score: <strong>129</strong></span>
+              <a href="https://www.duolingo.com/profile/gssriram?via=share_profile_link" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:#3b82f6;">
+                <img src="https://d35aaqx5ub95lt.cloudfront.net/favicon.ico" alt="Duolingo" style="width:16px;height:16px;background:transparent;">See on Duolingo
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- ============================================================ -->
+      <!-- PROJECTS SECTION (Projects page)                              -->
+      <!-- Placeholder — no content provided yet. Add project cards      -->
+      <!-- here later; nav + page toggle are already wired up.           -->
+      <!-- ============================================================ -->
+      <div id="page-projects" class="page-content" style="display:none;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:var(--text);">Projects</h1>
         <section class="section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Featured Projects</h2>
+          <div class="space-y-6">
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>&#127881; Festraa &ndash; Event Booking Website</strong><br>
+                  <span style="opacity:0.9;">Karpagam College of Engineering</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">Apr 2026 &middot; Associated with Karpagam College of Engineering</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">A responsive event booking website with user auth, booking management, and a pastel UI. Built with pure HTML, CSS &amp; JavaScript.</p>
+                  <p style="margin-top:0.35rem;color:#6b7280;font-size:0.8rem;">Skills: HTML, CSS, JavaScript</p>
+                  <div style="margin-top:0.75rem;display:flex;gap:0.6rem;">
+                    <a href="https://gssriram9050.github.io/festraa/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#fff;background:#3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128279; Live</a>
+                    <a href="https://github.com/gssriram9050/festraa" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;background:transparent;border:1px solid #3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128187; Repo</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>&#128676; Traffic Flow Predictor &amp; Route Optimizer</strong><br>
+                  <span style="opacity:0.9;">Karpagam College of Engineering</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">Apr 2026 &middot; Associated with Karpagam College of Engineering</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">A web-based traffic intelligence platform featuring route optimization, congestion forecasting, incident tracking, and real-time map visualization using Flask, OpenStreetMap &amp; OSRM. Built with Python, HTML, CSS &amp; JavaScript.</p>
+                  <p style="margin-top:0.35rem;color:#6b7280;font-size:0.8rem;">Skills: Python, HTML, CSS, JavaScript</p>
+                  <div style="margin-top:0.75rem;display:flex;gap:0.6rem;">
+                    <a href="https://gssriram9050.github.io/traffic-flow/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#fff;background:#3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128279; Live</a>
+                    <a href="https://github.com/gssriram9050/traffic-flow" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;background:transparent;border:1px solid #3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128187; Repo</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>&#128161; LiFi Communication System</strong><br>
+                  <span style="opacity:0.9;">Karpagam College of Engineering</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">Mar 2026 &middot; Associated with Karpagam College of Engineering</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">A working optical wireless communication demo transmitting text via LED light pulses, decoded by an LDR sensor and reconstructed through the Arduino Serial Monitor. Built with C++ &amp; Arduino UNO.</p>
+                  <p style="margin-top:0.35rem;color:#6b7280;font-size:0.8rem;">Skills: Arduino, C++</p>
+                  <div style="margin-top:0.75rem;display:flex;gap:0.6rem;">
+                    <a href="https://gssriram9050.github.io/lifi/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#fff;background:#3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128279; Live</a>
+                    <a href="https://github.com/gssriram9050/lifi" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;background:transparent;border:1px solid #3b82f6;padding:0.4rem 0.9rem;border-radius:8px;font-size:0.8rem;font-weight:600;">&#128187; Repo</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.linkedin.com/in/gssriramofficial/details/projects/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TECHNICAL PROFILES SECTION (Technical Profiles page)          -->
+      <!-- Placeholder — no content provided yet. Add LeetCode/GitHub/   -->
+      <!-- Codeforces-style profile links here later.                    -->
+      <!-- ============================================================ -->
+      <div id="page-technical-profiles" class="page-content" style="display:none;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:var(--text);">Technical Profiles</h1>
+        <section class="section-card rounded-lg p-6 text-center" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
           <h2 id="coding_profiles_title" class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Coding Profiles</h2>
-          <div id="coding-profiles-container" class="grid grid-cols-2 gap-4">
-            <div class="contact-item col-span-2 flex items-center justify-center gap-3" onclick="window.open('https://codolio.com/profile/gssriram','_blank')" style="cursor:pointer;padding:22px 24px;background:linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(59,130,246,0.06) 100%);border:2px solid #3b82f6;border-radius:12px;">
-              <span style="font-size:34px;pointer-events:none;">&#128202;</span>
+          <div id="coding-profiles-container" class="space-y-3">
+            <div class="contact-item flex items-center justify-center gap-3" onclick="window.open('https://codolio.com/profile/gssriram','_blank')" style="cursor:pointer;padding:22px 24px;background:linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(59,130,246,0.06) 100%);border:2px solid #3b82f6;border-radius:12px;">
+              <img src="https://codolio.com/codolio_assets/codolio.svg" alt="Codolio" style="width:34px;height:34px;pointer-events:none;">
               <a href="https://codolio.com/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:1.25rem;font-weight:700;pointer-events:none;">Codolio &mdash; All Coding Profiles</a>
             </div>
             <div class="contact-item flex items-center justify-center gap-2">
-              <span style="font-size:20px;">&#9889;</span>
+              <img src="https://codolio.com/icons/leetcode_dark.png" alt="LeetCode" style="width:20px;height:20px;">
               <a id="coding-profile-leetcode-link" href="https://leetcode.com/u/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">LeetCode</a>
             </div>
-            <div class="contact-item flex items-center justify-center gap-2">
-              <span style="font-size:20px;">&#129504;</span>
-              <a id="coding-profile-geeksforgeeks-link" href="https://geeksforgeeks.org/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">GeeksforGeeks</a>
+            <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://www.naukri.com/code360/profile/gssriram','_blank')" style="cursor:pointer;">
+              <img src="https://codolio.com/icons/codestudio_dark.png" alt="Code360" style="width:20px;height:20px;pointer-events:none;">
+              <a href="https://www.naukri.com/code360/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">Code360 by Coding Ninjas</a>
             </div>
             <div class="contact-item flex items-center justify-center gap-2">
-              <span style="font-size:20px;">&#128104;&#8205;&#127859;</span>
+              <img src="https://codolio.com/icons/gfg.png" alt="GeeksforGeeks" style="width:20px;height:20px;">
+              <a id="coding-profile-geeksforgeeks-link" href="https://geeksforgeeks.org/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">GeeksForGeeks</a>
+            </div>
+            <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://www.interviewbit.com/profile/sriram-g-s','_blank')" style="cursor:pointer;">
+              <img src="https://codolio.com/icons/interviewbit.png" alt="InterviewBit" style="width:20px;height:20px;pointer-events:none;">
+              <a href="https://www.interviewbit.com/profile/sriram-g-s" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">InterviewBit</a>
+            </div>
+            <div class="contact-item flex items-center justify-center gap-2">
+              <img src="https://codolio.com/icons/codechef_dark.png" alt="CodeChef" style="width:20px;height:20px;">
               <a id="coding-profile-codechef-link" href="https://codechef.com/users/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">CodeChef</a>
             </div>
             <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://codeforces.com/profile/gssriram','_blank')" style="cursor:pointer;">
-              <span style="font-size:20px;pointer-events:none;">&#9876;&#65039;</span>
-              <a href="https://codeforces.com/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">Codeforces</a>
-            </div>
-            <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://www.naukri.com/code360/profile/gssriram','_blank')" style="cursor:pointer;">
-              <span style="font-size:20px;pointer-events:none;">&#129513;</span>
-              <a href="https://www.naukri.com/code360/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">Naukri Code360 (by Coding Ninjas)</a>
+              <img src="https://codolio.com/icons/codeforces.png" alt="Codeforces" style="width:20px;height:20px;pointer-events:none;">
+              <a href="https://codeforces.com/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">CodeForces</a>
             </div>
             <div class="contact-item flex items-center justify-center gap-2">
-              <span style="font-size:20px;">&#127919;</span>
+              <img src="https://codolio.com/icons/hackerrank.png" alt="HackerRank" style="width:20px;height:20px;">
               <a id="coding-profile-hackerrank-link" href="https://hackerrank.com/profile/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;">HackerRank</a>
             </div>
-            <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://www.interviewbit.com/profile/sriram-g-s','_blank')" style="cursor:pointer;">
-              <span style="font-size:20px;pointer-events:none;">&#128188;</span>
-              <a href="https://www.interviewbit.com/profile/sriram-g-s" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">InterviewBit</a>
-            </div>
             <div class="contact-item flex items-center justify-center gap-2" onclick="window.open('https://atcoder.jp/users/gssriram','_blank')" style="cursor:pointer;">
-              <span style="font-size:20px;pointer-events:none;">&#127344;&#65039;</span>
+              <img src="https://codolio.com/icons/atcoder_dark.png" alt="AtCoder" style="width:20px;height:20px;pointer-events:none;">
               <a href="https://atcoder.jp/users/gssriram" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;pointer-events:none;">AtCoder</a>
             </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- WORK EXPERIENCE SECTION (Work Experience page)                -->
+      <!-- Roles in reverse-chronological order, same list style as the  -->
+      <!-- Education page (dot marker + title/subtitle/meta).            -->
+      <!-- ============================================================ -->
+      <div id="page-work-experience" class="page-content" style="display:none;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Experience</h1>
+        <section class="section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Experience</h2>
+          <div class="space-y-6">
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Infosys Springboard</strong><br>
+                  <span style="opacity:0.9;">Python Developer Intern (Upcoming)</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">Oct 2026 - Dec 2026 (3 months) (Selected) &middot; Bengaluru</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Selected for a 3-month Python &amp; Software Engineering internship after clearing a video-proctored assessment.</p>
+                </div>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Thiranex</strong><br>
+                  <span style="opacity:0.9;">Full Stack Developer Intern</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">May 2026 - June 2026 (1 month) &middot; Chennai</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Built a responsive portfolio web app with dark/light theming, scroll-reveal animations, and interactive project modals using HTML5, CSS3, and JavaScript.</p>
+                </div>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Way2me</strong><br>
+                  <span style="opacity:0.9;">Web Developer Intern</span><br>
+                  <span style="color:#6b7280; font-size:0.875rem;">May 2026 - June 2026 (20 days) &middot; Namakkal</span>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Built responsive frontend components with HTML, CSS, and JavaScript for a live consumer-facing web application.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.linkedin.com/in/gssriramofficial/details/experience/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- CERTIFICATES SECTION (Certificates page)                      -->
+      <!-- All 43 licenses/certifications, grouped by issuing org and    -->
+      <!-- split into three tiers. Card markup is generated entirely by  -->
+      <!-- renderCertificates() from the CERTIFICATES_DATA array in the  -->
+      <!-- script below — edit that array, not this markup, to add/      -->
+      <!-- remove/re-tier a credential. Hidden by default; toggled via   -->
+      <!-- nav.                                                          -->
+      <!-- ============================================================ -->
+      <div id="page-certifications-detail" class="page-content" style="display:none;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:var(--text);">Certificates</h1>
+        <div id="certificates-root"></div>
+        <div style="text-align:center;margin-top:1.5rem;">
+          <a href="https://www.linkedin.com/in/gssriramofficial/details/certifications/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- ACHIEVEMENTS SECTION (Achievements page)                      -->
+      <!-- Honors & awards, same list style as Education/Work Experience.-->
+      <!-- ============================================================ -->
+      <div id="page-achievements" class="page-content" style="display:none;">
+        <h1 class="mb-8 font-bold text-center page-title" style="color:#e5e5e5;">Achievements</h1>
+        <section class="section-card rounded-lg p-6" style="border-left:4px solid #3b82f6;background-color:#1a1a1a;border:1px solid rgba(107,114,128,0.12);border-left:4px solid #3b82f6;">
+          <h2 class="mb-4 font-bold" style="font-size:1.5rem;color:#e5e5e5;">Honors &amp; Awards</h2>
+          <div class="space-y-6">
+            <div class="achievement-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Google | The Big Code 2026 | Round 1 | Top 15,000</strong>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Ranked among the Top 15,000 participants in India in Round 1 of Google's The Big Code 2026 competitive coding contest.</p>
+                </div>
+              </div>
+            </div>
+            <div class="achievement-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Merit Scholarship Certificate</strong>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Awarded a Merit Scholarship by Karpagam College of Engineering &mdash; 100% Tuition Fee Waiver and 25% Hostel Fee Waiver, in recognition of academic performance.</p>
+                </div>
+              </div>
+            </div>
+            <div class="achievement-item">
+              <div class="flex items-start gap-3">
+                <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background:#3b82f6;"></div>
+                <div class="flex-1">
+                  <strong>Certificate of Appreciation &ndash; 100% Attendance</strong>
+                  <p style="margin-top:0.5rem;color:#a3a3a3;font-size:0.9rem;line-height:1.5;">Recognized with a Certificate of Appreciation for maintaining 100% attendance.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:1.5rem;">
+            <a href="https://www.linkedin.com/in/gssriramofficial/details/honors/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#3b82f6;font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>
           </div>
         </section>
       </div>
@@ -497,6 +1072,46 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
   </main>
 
   <!-- ============================================================ -->
+  <!-- CERTIFICATE PREVIEW MODAL                                     -->
+  <!-- Single shared modal for every certificate card. Opened by      -->
+  <!-- openCertModal(id) (see script), closed via the X button,       -->
+  <!-- backdrop click, or Escape. The preview pane is a designed      -->
+  <!-- certificate visual (org seal + name) rather than a live embed  -->
+  <!-- — most issuing platforms block iframes outright, so an embed   -->
+  <!-- attempt just renders blank. Clicking anywhere in the pane (or  -->
+  <!-- the "Verify Live Credential" button below it) opens the real   -->
+  <!-- credential URL in a new tab. Fully offline — no network        -->
+  <!-- request is made to render the preview itself, so it renders    -->
+  <!-- identically whether opened from your host, a local file, or    -->
+  <!-- with the network disabled.                                     -->
+  <!-- ============================================================ -->
+  <div id="cert-modal-overlay" class="cert-modal-overlay" onclick="if(event.target===this) closeCertModal();">
+    <div class="cert-modal" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title">
+      <button type="button" class="cert-modal-close" aria-label="Close" onclick="closeCertModal();">&#10005;</button>
+      <div class="cert-modal-preview" id="cert-modal-preview" role="button" tabindex="0" aria-label="Open full credential in a new tab">
+        <span class="cert-modal-preview-eyebrow">Verified Credential</span>
+        <div class="cert-modal-preview-content">
+          <span class="cert-modal-preview-seal" id="cert-modal-preview-icon">&#127891;</span>
+          <span class="cert-modal-preview-org-name" id="cert-modal-preview-org-name">Issuing organization</span>
+        </div>
+        <span class="cert-modal-preview-hint">Open full credential &#8599;</span>
+      </div>
+      <div class="cert-modal-body">
+        <h3 id="cert-modal-title">Certificate name</h3>
+        <p class="cert-modal-org" id="cert-modal-org">Issuing organization</p>
+        <div class="cert-modal-details">
+          <span id="cert-modal-issued"></span>
+          <span id="cert-modal-credid"></span>
+        </div>
+        <a id="cert-modal-verify" class="cert-modal-verify-btn" href="#" target="_blank" rel="noopener noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Verify Live Credential
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
   <!-- FOOTER                                                        -->
   <!-- ============================================================ -->
   <footer id="footer" class="w-full border-t" style="position:relative;z-index:50;background-color:#1a1a1a;border-color:rgba(107,114,128,0.25);">
@@ -536,14 +1151,15 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
 
       // --- Hero / About Me ---
       hero_name:          "Sriram G S",
-      hero_tagline:       "Intern @ Infosys Springboard | IT Student @ KCE | 1500+ Problems Solved | 110+ Active Coding Days | 80+ Days Current Streak | 50+ Contests | LeetCode 1750+ | CodeChef 2\u2605 | Codeforces Pupil | Code360 Achiever",
+      hero_tagline:       "Intern @ Infosys Springboard | IT Student @ KCE | 1770+ Problems Solved | 140+ Active Coding Days | 110+ Days Current Streak | 75 Contests | LeetCode 1800+ | CodeChef 3\u2605 | Codeforces Pupil | Code360 Specialist",
       hero_location:      "Coimbatore, Tamil Nadu, India",
       about_title:        "Summary",
-      about_description:  "As someone who pursued Computer Science as my major in higher secondary, I built a strong foundation in C++, Python, and MySQL while earning consecutive centums in Computer Science. This deepened my passion for technology and inspired me to pursue engineering. Due to my dedication and academic performance, I was awarded a merit scholarship from Karpagam College of Engineering, where I am currently pursuing a B.Tech in Information Technology.\n\nDuring my first semester, I strengthened my programming fundamentals through C. In my second semester, I expanded my knowledge into Data Structures and Algorithms, along with HTML, CSS, and JavaScript. As I enter my third semester, I am excited to continue learning and exploring technologies such as Java.\n\nAlongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1350+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.\n\nI am currently an Intern at Infosys Springboard, where I continue to gain practical exposure while exploring certifications, training opportunities, and industry-relevant skills. I enjoy learning, building projects, sharing my journey, and continuously improving as a developer and technology professional.",
+      about_description:  "As someone who pursued Computer Science as my major in higher secondary, I built a strong foundation in C++, Python, and MySQL while earning consecutive centums in Computer Science. This deepened my passion for technology and inspired me to pursue engineering. Due to my dedication and academic performance, I was awarded a merit scholarship from Karpagam College of Engineering, where I am currently pursuing a B.Tech in Information Technology.\n\nDuring my first semester, I strengthened my programming fundamentals through C. In my second semester, I expanded my knowledge into Data Structures and Algorithms, along with HTML, CSS, and JavaScript. As I enter my third semester, I am excited to continue learning and exploring technologies such as Java.\n\nAlongside academics, I have been consistently focused on competitive programming and placement preparation. I have solved 1770+ problems across platforms including LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas, helping me strengthen my analytical thinking and problem-solving abilities.\n\nI am currently an Intern at Infosys Springboard, where I continue to gain practical exposure while exploring certifications, training opportunities, and industry-relevant skills. I enjoy learning, building projects, sharing my journey, and continuously improving as a developer and technology professional.",
 
       // --- Skills ---
-      skills_title: "Top Skills",
-      skills_list:  "Python, C++, C, MySQL, Artificial Intelligence (AI)",
+      skills_title: "Skills",
+      skills_list:  "Data Structures and Algorithms (DSA), Python, JavaScript, C++, C",
+      basic_skills_list: "Java, SQL, HTML, CSS, Bootstrap, MySQL, MongoDB, Oracle, Graph Algorithms, Object-Oriented Programming, Problem Solving, AWS, Git, GitHub, VS Code, Artificial Intelligence, Prompt Engineering, Data Science, Pandas, Power BI, Figma, Canva, Graphic Design, Embedded Systems, Arduino, Internet of Things (IoT), Cybersecurity",
 
       // --- Education ---
       education_title: "Education",
@@ -620,6 +1236,218 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
       el.onclick = e => { e.preventDefault(); window.open(href, '_blank'); };
     }
 
+    // ================================================================
+    // CERTIFICATES SECTION — data + rendering + modal
+    // ================================================================
+    // Single source of truth for every credential. To add, remove, or
+    // re-tier a certificate, edit ONLY this array — the markup and the
+    // modal are generated from it automatically by renderCertificates().
+    //   tier: 'gov'    — Government bodies & major companies (top priority)
+    //         'pro'    — Other important, useful professional/technical certs
+    //         'skills' — Additional, non-core skills
+    //         'other'  — Everything else (participation, recognition, etc.)
+    // ================================================================
+    const CERTIFICATES_DATA = [
+      // --- gov: government bodies & major companies ---
+      { id: 1,  name: 'MongoDB Basics for Students', org: 'MongoDB', issued: 'Jul 2026', url: 'https://www.credly.com/badges/edf9e8f4-eb18-45e0-a9f5-a2cab8dbc434/linked_in_profile', tier: 'gov' },
+      { id: 2,  name: 'Python for Data Science', org: 'IBM', issued: 'Jun 2026', url: 'https://www.credly.com/badges/3320357f-f997-4fad-ab06-b7842e920d64/linked_in_profile', tier: 'gov' },
+      { id: 4,  name: 'AI Skills Fest 2026', org: 'Microsoft', issued: 'Jun 2026', url: 'https://www.credly.com/badges/25e62e0d-2d96-4739-86f1-dd16665a424a/linked_in_profile', tier: 'gov' },
+      { id: 47, name: 'Samsung Solve for Tomorrow 2026', org: 'Samsung Electronics', issued: 'May 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/1849185723/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'gov' },
+      { id: 18, name: 'Internet Crimes and Cyber Security', org: 'NPTEL', issued: 'May 2026', credId: 'NPTEL26LW01S150504485', url: 'https://nptel.ac.in/noc/E_Certificate/NOC26LW01S15050448504306806', tier: 'gov' },
+      { id: 46, name: 'AICTE PARAKH – Student Learning Assessment', org: 'AICTE', issued: 'Feb 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/1643817143/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'gov' },
+      { id: 44, name: 'C', org: 'Spoken Tutorial (IIT Bombay)', issued: 'Dec 2025', credId: '4575747XYG', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/1505714479/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'gov' },
+      { id: 48, name: 'HTML', org: 'Spoken Tutorial (IIT Bombay)', issued: 'Apr 2026', credId: '4575747PAH', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/1885961030/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'gov' },
+      { id: 50, name: 'Acquiring Data', org: 'FutureSkills Prime', issued: 'Mar 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/510302277/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'gov' },
+
+      // --- pro: other important, useful professional/technical certs ---
+      { id: 3,  name: 'Python 101 for Data Science', org: 'Cognitive Class', issued: 'Jun 2026', credId: 'e538f576a9e04ff9a917b6261dcc8975', url: 'https://courses.cognitiveclass.ai/certificates/e538f576a9e04ff9a917b6261dcc8975', tier: 'pro' },
+      { id: 5,  name: 'Learn Advanced C++ Course Online', org: 'Simplilearn', issued: 'Jun 2026', credId: '10348854', url: 'https://simpli-web.app.link/e/e3eJBBdYY3b', tier: 'pro' },
+      { id: 24, name: 'Power BI for Beginners (Powered by Microsoft)', org: 'Simplilearn', issued: 'Jan 2026', credId: '9762763', url: 'https://simpli-web.app.link/e/rq87334Te0b', tier: 'pro' },
+      { id: 28, name: 'Vibe Coding Course', org: 'Simplilearn', issued: 'Jan 2026', credId: '9715581', url: 'https://simpli-web.app.link/e/5CLS8Tq0UZb', tier: 'pro' },
+      { id: 29, name: 'Introduction to IoT', org: 'Simplilearn', issued: 'Jan 2026', credId: '9715203', url: 'https://simpli-web.app.link/e/AyK1QeGTUZb', tier: 'pro' },
+      { id: 31, name: 'GitHub Basics', org: 'Simplilearn', issued: 'Dec 2025', credId: '9635082', url: 'https://simpli-web.app.link/e/Ooy7S4yUmZb', tier: 'pro' },
+      { id: 32, name: 'Introduction to AWS Solutions (Powered by AWS)', org: 'Simplilearn', issued: 'Dec 2025', credId: '9634921', url: 'https://simpli-web.app.link/e/Wol5l0TPmZb', tier: 'pro' },
+      { id: 33, name: 'AWS for Beginners', org: 'Simplilearn', issued: 'Dec 2025', credId: '9626340', url: 'https://simpli-web.app.link/e/ymtD9wHPmZb', tier: 'pro' },
+      { id: 34, name: 'Gemini for Google Workspace (Powered by Google Cloud)', org: 'Simplilearn', issued: 'Dec 2025', credId: '9610489', url: 'https://simpli-web.app.link/e/qJ25obN1eZb', tier: 'pro' },
+      { id: 36, name: 'Introduction to Generative AI Studio (Powered by Google Cloud)', org: 'Simplilearn', issued: 'Nov 2025', credId: '9452252', url: 'https://simpli-web.app.link/e/8wWFTmpjwYb', tier: 'pro' },
+      { id: 40, name: 'C Programming Basics', org: 'Simplilearn', issued: 'Oct 2025', credId: '9078189', url: 'https://simpli-web.app.link/e/hm9f6ZvCoYb', tier: 'pro' },
+      { id: 6,  name: 'Navigating an Entry-Level Job Search', org: 'LinkedIn', issued: 'Jun 2026', url: 'https://www.linkedin.com/learning/certificates/d9e4068dbc47ee447c9b16619f4663a1b57d6f66a4c9e8b91cee16e88d727ec6/', tier: 'pro' },
+      { id: 7,  name: 'Software Engineer Intern', org: 'HackerRank', issued: 'May 2026', credId: '5CF9D6737CA6', url: 'https://www.hackerrank.com/certificates/5cf9d6737ca6', tier: 'pro' },
+      { id: 8,  name: 'Software Engineer', org: 'HackerRank', issued: 'May 2026', credId: '08C300126F74', url: 'https://www.hackerrank.com/certificates/08c300126f74', tier: 'pro' },
+      { id: 9,  name: 'Java (Basic)', org: 'HackerRank', issued: 'May 2026', credId: '9BE84174457F', url: 'https://www.hackerrank.com/certificates/9be84174457f', tier: 'pro' },
+      { id: 12, name: 'JavaScript (Basic)', org: 'HackerRank', issued: 'May 2026', credId: '020C6FADF19D', url: 'https://www.hackerrank.com/certificates/020c6fadf19d', tier: 'pro' },
+      { id: 13, name: 'CSS (Basic)', org: 'HackerRank', issued: 'May 2026', credId: '5C0FE0AB2B69', url: 'https://www.hackerrank.com/certificates/5c0fe0ab2b69', tier: 'pro' },
+      { id: 14, name: 'Problem Solving (Intermediate)', org: 'HackerRank', issued: 'May 2026', credId: '3C19D106963A', url: 'https://www.hackerrank.com/certificates/3c19d106963a', tier: 'pro' },
+      { id: 15, name: 'SQL (Basic)', org: 'HackerRank', issued: 'May 2026', credId: '8A6080B9523A', url: 'https://www.hackerrank.com/certificates/8a6080b9523a', tier: 'pro' },
+      { id: 16, name: 'Problem Solving (Basic)', org: 'HackerRank', issued: 'May 2026', credId: 'C398E17A3CBA', url: 'https://www.hackerrank.com/certificates/c398e17a3cba', tier: 'pro' },
+      { id: 17, name: 'Python (Basic)', org: 'HackerRank', issued: 'May 2026', credId: '8AA0AEEF2FF0', url: 'https://www.hackerrank.com/certificates/8aa0aeef2ff0', tier: 'pro' },
+      { id: 10, name: 'CodinGame Certification - C++', org: 'CodinGame', issued: 'May 2026', credId: 'nDPkXAU6x2lDL8FIrXLxeA', url: 'https://www.codingame.com/certification/nDPkXAU6x2lDL8FIrXLxeA', tier: 'pro' },
+      { id: 11, name: 'Build AI Agents That Actually Verify Their Own Work', org: 'TestMu AI', issued: 'May 2026', credId: 'GGW-W8EKL0', url: 'https://www.testmuai.com/certifications/testmuai-certified/GGW-W8EKL0.png', tier: 'pro' },
+      { id: 19, name: 'Introduction to Cybersecurity Awareness', org: 'HP LIFE', issued: 'Apr 2026', credId: '6b555d13-21f3-4131-a9e4-507588300b0a', url: 'https://www.life-global.org/certificate/6b555d13-21f3-4131-a9e4-507588300b0a', tier: 'pro' },
+      { id: 21, name: 'Git & GitHub Bootcamp', org: 'LetsUpgrade', issued: 'Feb 2026', credId: 'LUEGGFEB126429', url: 'https://verify.letsupgrade.in/certificate/LUEGGFEB126429', tier: 'pro' },
+      { id: 23, name: 'HTML & CSS Bootcamp', org: 'LetsUpgrade', issued: 'Feb 2026', credId: 'LUEHTMLFEB12687', url: 'https://verify.letsupgrade.in/certificate/LUEHTMLFEB12687', tier: 'pro' },
+      { id: 25, name: 'Placement Prep Bootcamp', org: 'LetsUpgrade', issued: 'Jan 2026', credId: 'LUEPPJAN12625', url: 'https://verify.letsupgrade.in/certificate/LUEPPJAN12625', tier: 'pro' },
+      { id: 52, name: 'Basics of Python', org: 'Infosys Springboard', issued: 'Mar 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/866689343/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'pro' },
+      { id: 53, name: 'Software Engineering and Agile software development', org: 'Infosys Springboard', issued: 'Mar 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/866766515/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'pro' },
+      { id: 54, name: "SRISHTI-VIDYUT'25 INNOVATION HACKATHON", org: 'Karpagam College of Engineering', issued: 'Oct 2025', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/907873669/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'pro' },
+
+      // --- skills: additional, non-core skills ---
+      { id: 20, name: 'Introduction to Digital Business Skills', org: 'HP LIFE', issued: 'Apr 2026', credId: '3bbec8ac-01bb-4db4-89d4-884ab64ff0ff', url: 'https://www.life-global.org/certificate/3bbec8ac-01bb-4db4-89d4-884ab64ff0ff', tier: 'skills' },
+      { id: 38, name: 'AI for Business Professionals', org: 'HP LIFE', issued: 'Oct 2025', credId: '35342474-15b2-4430-9ae4-e0143922bcf6', url: 'https://www.life-global.org/certificate/35342474-15b2-4430-9ae4-e0143922bcf6', tier: 'skills' },
+      { id: 39, name: 'AI for Beginners', org: 'HP LIFE', issued: 'Oct 2025', credId: '243d0f6e-d6e2-416f-8fe7-4879284dc1c3', url: 'https://www.life-global.org/certificate/243d0f6e-d6e2-416f-8fe7-4879284dc1c3', tier: 'skills' },
+      { id: 26, name: 'Figma Bootcamp', org: 'LetsUpgrade', issued: 'Jan 2026', credId: 'LUEFGJAN12650', url: 'https://verify.letsupgrade.in/certificate/LUEFGJAN12650', tier: 'skills' },
+      { id: 30, name: 'Introduction to Figma', org: 'Simplilearn', issued: 'Jan 2026', credId: '9699550', url: 'https://simpli-web.app.link/e/b8hFYPRgOZb', tier: 'skills' },
+      { id: 22, name: 'EF SET English Certificate 60/100 (B2 Upper Intermediate)', org: 'EF SET', issued: 'Feb 2026', url: 'https://cert.efset.org/en/pm7r8o', tier: 'skills' },
+      { id: 27, name: 'Advanced English Test Certificate 58/100 (B1 Intermediate)', org: 'Naukri Campus', issued: 'Jan 2026', url: 'https://www.naukri.com/campus/speech-assessment/reports?id=69694f4823caac46f39bdaee&type=aispoken02&utmSource=share', tier: 'skills' },
+      { id: 35, name: 'Graphic Design Essentials', org: 'Canva', issued: 'Dec 2025', credId: 'ade08a', url: 'https://canva.com/design-school/certification-award/ade08a1f-324b-48f0-9972-41a21604b2de', tier: 'skills' },
+      { id: 37, name: 'Work smarter with AI', org: 'Canva', issued: 'Nov 2025', credId: 'd35414', url: 'https://canva.com/design-school/certification-award/d35414de-605c-405a-bdeb-21013b730e27', tier: 'skills' },
+      { id: 41, name: 'Marketing with Canva', org: 'Canva', issued: 'Sep 2025', credId: '07ece2', url: 'https://canva.com/design-school/certification-award/07ece279-894d-4331-852d-c70734a94841', tier: 'skills' },
+      { id: 42, name: 'Canva Essentials', org: 'Canva', issued: 'Sep 2025', credId: 'ff7d99', url: 'https://canva.com/design-school/certification-award/ff7d9936-2e8b-4191-a227-e933a892e48b', tier: 'skills' },
+      { id: 43, name: 'Canva for Work', org: 'Canva', issued: 'Sep 2025', credId: 'fb84ba', url: 'https://canva.com/design-school/certification-award/fb84baea-642a-4b74-8029-9e14a0a89b36', tier: 'skills' },
+
+      // --- other: participation & recognition ---
+      { id: 45, name: "Gillette Guard 'Safalata Apni Mutthi Mein' Grooming Workshop", org: 'Gillette India', issued: 'Nov 2025', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/1526731128/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'other' },
+      { id: 49, name: 'Battle of Bands ft. Gemini (Music Night Edition)', org: 'Google Student Ambassador', issued: 'Jun 2026', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/327435264/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'other' },
+      { id: 51, name: 'Meritorious Scholarship', org: 'Karpagam College of Engineering', issued: 'May 2025', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/742658977/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'other' },
+      { id: 55, name: 'Certificate of Appreciation: 100% Attendance', org: 'Karpagam College of Engineering', issued: 'Nov 2025', url: 'https://www.linkedin.com/in/gssriramofficial/overlay/Certifications/912577209/treasury?profileId=ACoAAF5gWjIBVhl-vGknxk5uBGmWYToU6Ej9cXw', tier: 'other' }
+    ];
+
+    // Emoji chosen per organization — no duplicates, each picked to be
+    // recognizable at a glance (company logo shape, subject matter, or
+    // the nature of the credential).
+    const CERT_ORG_ICONS = {
+      'MongoDB': '&#127807;', 'IBM': '&#128311;', 'Microsoft': '&#129498;',
+      'Samsung Electronics': '&#128241;', 'NPTEL': '&#127963;', 'AICTE': '&#128220;',
+      'Spoken Tutorial (IIT Bombay)': '&#128214;', 'FutureSkills Prime': '&#128187;',
+      'Cognitive Class': '&#129514;', 'Simplilearn': '&#127891;', 'LinkedIn': '&#128188;',
+      'HackerRank': '&#127942;', 'CodinGame': '&#127918;', 'TestMu AI': '&#129302;',
+      'HP LIFE': '&#128161;', 'LetsUpgrade': '&#128640;', 'Infosys Springboard': '&#127793;',
+      'EF SET': '&#128483;', 'Naukri Campus': '&#128227;', 'Canva': '&#127912;',
+      'Gillette India': '&#9986;', 'Google Student Ambassador': '&#127925;',
+      'Karpagam College of Engineering': '&#127979;'
+    };
+
+    // Four priority tiers, ordered highest to lowest. Every card, header,
+    // and the modal all share the site's one blue accent (var(--primary))
+    // — priority reads through section order and grouping, not color.
+    const CERT_TIERS = [
+      { key: 'gov',    title: 'Government &amp; Major Company Credentials', subtitle: 'Issued directly by government bodies or leading technology companies', icon: '&#127963;' },
+      { key: 'pro',     title: 'Professional &amp; Technical Credentials',   subtitle: 'Other important, hands-on engineering and programming certifications', icon: '&#128188;' },
+      { key: 'skills',  title: 'Additional Skills',                          subtitle: 'Design, communication &amp; general-interest courses',                  icon: '&#127912;' },
+      { key: 'other',   title: 'Other Certificates',                         subtitle: 'Participation, recognition &amp; miscellaneous credentials',           icon: '&#128193;' }
+    ];
+
+    // Builds the entire tiered/grouped grid from CERTIFICATES_DATA and
+    // mounts it into #certificates-root. Safe to call more than once.
+    function renderCertificates() {
+      const root = document.getElementById('certificates-root');
+      if (!root) return;
+      root.innerHTML = '';
+
+      CERT_TIERS.forEach(tierMeta => {
+        const items = CERTIFICATES_DATA.filter(c => c.tier === tierMeta.key);
+        if (!items.length) return;
+
+        const tierEl = document.createElement('div');
+        tierEl.className = 'cert-tier';
+        tierEl.innerHTML = `<div class="cert-tier-header"><span class="cert-tier-icon">${tierMeta.icon}</span><h2>${tierMeta.title}</h2><span class="cert-tier-sub">${tierMeta.subtitle}</span></div>`;
+
+        // Group by organization, preserving first-seen order within the tier
+        const orgs = [];
+        items.forEach(c => { if (!orgs.includes(c.org)) orgs.push(c.org); });
+
+        orgs.forEach(org => {
+          const orgItems = items.filter(c => c.org === org);
+          const orgGroup = document.createElement('div');
+          orgGroup.className = 'cert-org-group';
+          orgGroup.innerHTML = `<p class="cert-org-name">${org} &middot; ${orgItems.length} ${orgItems.length === 1 ? 'credential' : 'credentials'}</p>`;
+
+          const grid = document.createElement('div');
+          grid.className = 'cert-grid';
+          orgItems.forEach(cert => grid.appendChild(buildCertCard(cert, tierMeta)));
+
+          orgGroup.appendChild(grid);
+          tierEl.appendChild(orgGroup);
+        });
+
+        root.appendChild(tierEl);
+      });
+    }
+
+    // Builds one clickable rectangular card (no separate link/button — the
+    // whole card is the interactive surface) and wires it to the shared
+    // modal. Every card is the same uniform shape; only its tier accent
+    // color and grouping communicate priority.
+    function buildCertCard(cert, tierMeta) {
+      const card = document.createElement('div');
+      card.className = 'cert-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', `${cert.name} from ${cert.org}. Open preview.`);
+      card.innerHTML = `
+        <div>
+          <div class="cert-card-icon">${CERT_ORG_ICONS[cert.org] || '&#128196;'}</div>
+          <p class="cert-card-name">${cert.name}</p>
+        </div>
+        <p class="cert-card-meta">${cert.org} &middot; ${cert.issued}</p>
+      `;
+      card.addEventListener('click', () => openCertModal(cert.id));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCertModal(cert.id); }
+      });
+      return card;
+    }
+
+    // Tracks which credential's URL the preview pane (and its click-to-open
+    // behavior) should point to for the currently open modal.
+    let currentCertUrl = null;
+
+    // Opens the single shared modal, populated for the given credential.
+    // The preview panel is tinted with that credential's tier color so
+    // the modal visually matches the priority section it came from.
+    function openCertModal(id) {
+      const cert = CERTIFICATES_DATA.find(c => c.id === id);
+      if (!cert) return;
+
+      currentCertUrl = cert.url;
+
+      document.getElementById('cert-modal-preview-icon').innerHTML = CERT_ORG_ICONS[cert.org] || '&#128196;';
+      document.getElementById('cert-modal-preview-org-name').textContent = cert.org;
+      document.getElementById('cert-modal-title').textContent = cert.name;
+      document.getElementById('cert-modal-org').textContent = cert.org;
+      document.getElementById('cert-modal-issued').innerHTML = `<span><strong>Issued:</strong> ${cert.issued}</span>`;
+
+      const credEl = document.getElementById('cert-modal-credid');
+      credEl.style.display = cert.credId ? '' : 'none';
+      if (cert.credId) credEl.innerHTML = `<strong>Credential ID:</strong> ${cert.credId}`;
+
+      document.getElementById('cert-modal-verify').href = cert.url;
+
+      document.getElementById('cert-modal-overlay').classList.add('open');
+      document.body.classList.add('cert-modal-locked');
+    }
+
+    function closeCertModal() {
+      document.getElementById('cert-modal-overlay').classList.remove('open');
+      document.body.classList.remove('cert-modal-locked');
+      currentCertUrl = null;
+    }
+
+    // Clicking anywhere in the preview pane opens the real credential in
+    // a new tab, exactly like the "Verify Live Credential" button does.
+    function openCurrentCertInNewTab() {
+      if (currentCertUrl) window.open(currentCertUrl, '_blank', 'noopener,noreferrer');
+    }
+    const certPreviewPane = document.getElementById('cert-modal-preview');
+    certPreviewPane.addEventListener('click', openCurrentCertInNewTab);
+    certPreviewPane.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCurrentCertInNewTab(); }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeCertModal();
+    });
+
     // Applies the active config (theme tokens + content strings) to every
     // themeable element on the page. Runs once on load (via the SDK init
     // block below, or directly with defaultConfig if no SDK is present)
@@ -633,6 +1461,16 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
       const text = config.text_color || defaultConfig.text_color;
       const primary = config.primary_action_color || defaultConfig.primary_action_color;
       const secondary = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+      // --- Sync CSS custom properties (drives the Certificates section) ---
+      const root = document.documentElement.style;
+      root.setProperty('--bg', bg);
+      root.setProperty('--surface', surface);
+      root.setProperty('--text', text);
+      root.setProperty('--text-secondary', secondary);
+      root.setProperty('--primary', primary);
+      root.setProperty('--border', secondary + '20');
+      root.setProperty('--font-family', ff);
 
       // --- Global page styling ---
       document.body.style.backgroundColor = bg;
@@ -702,24 +1540,27 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
         aboutDesc.style.color = text;
       }
 
-      // --- Skills ---
-      const skillsTitle = document.getElementById('skills-title');
-      if (skillsTitle) { skillsTitle.style.color = text; skillsTitle.style.fontSize = (fs * 1.5) + 'px'; }
-      const skillsList = config.skills_list || defaultConfig.skills_list;
-      const skillsContainer = document.getElementById('skills-container');
-      if (skillsContainer) {
-        skillsContainer.innerHTML = '';
-        skillsList.split(',').map(s => s.trim()).forEach(skill => {
-          const badge = document.createElement('span');
-          badge.className = 'skill-badge px-4 py-2 rounded-full font-medium';
-          badge.textContent = skill;
-          badge.style.backgroundColor = primary + '20';
-          badge.style.color = primary;
-          badge.style.fontSize = (fs * 0.875) + 'px';
-          badge.style.border = '1px solid ' + primary + '40';
-          skillsContainer.appendChild(badge);
-        });
+      // --- Skills / Basic Skills / Tech Skills ---
+      function renderSkillBadges(titleId, listStr, containerId) {
+        const titleEl = document.getElementById(titleId);
+        if (titleEl) { titleEl.style.color = text; titleEl.style.fontSize = (fs * 1.5) + 'px'; }
+        const container = document.getElementById(containerId);
+        if (container) {
+          container.innerHTML = '';
+          listStr.split(',').map(s => s.trim()).filter(Boolean).forEach(skill => {
+            const badge = document.createElement('span');
+            badge.className = 'skill-badge px-4 py-2 rounded-full font-medium';
+            badge.textContent = skill;
+            badge.style.backgroundColor = primary + '20';
+            badge.style.color = primary;
+            badge.style.fontSize = (fs * 0.875) + 'px';
+            badge.style.border = '1px solid ' + primary + '40';
+            container.appendChild(badge);
+          });
+        }
       }
+      renderSkillBadges('skills-title', config.skills_list || defaultConfig.skills_list, 'skills-container');
+      renderSkillBadges('basic-skills-title', config.basic_skills_list || defaultConfig.basic_skills_list, 'basic-skills-container');
 
       // --- Education ---
       ['1','2','3'].forEach(n => {
@@ -752,16 +1593,77 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
       if (langContainer) {
         langContainer.innerHTML = '';
         langList.split(',').map(s => s.trim()).forEach(lang => {
-          const p = document.createElement('p');
-          p.className = 'lang-item';
           const parenMatch = lang.match(/^(.+?)\s*\((.+)\)$/);
           const parts = lang.split('-').map(s => s.trim());
+          let langName = '', langDetail = '';
           if (parenMatch) {
-            p.innerHTML = `<strong>${parenMatch[1].trim()}</strong> - ${parenMatch[2].trim()}`;
+            langName = parenMatch[1].trim();
+            langDetail = parenMatch[2].trim();
           } else if (parts.length >= 2) {
-            p.innerHTML = `<strong>${parts[0]}</strong> - ${parts.slice(1).join('-').trim()}`;
+            langName = parts[0];
+            langDetail = parts.slice(1).join('-').trim();
           } else {
-            p.innerHTML = `<strong>${lang}</strong>`;
+            langName = lang;
+          }
+
+          // English gets merged with its Duolingo score into a single button with two logo links
+          if (langName.toLowerCase() === 'english') {
+            const div = document.createElement('div');
+            div.className = 'lang-item flex items-center justify-center gap-2 flex-wrap';
+            div.style.fontSize = fs + 'px';
+            div.style.color = text;
+
+            const span = document.createElement('span');
+            span.innerHTML = `<strong>${langName}</strong>${langDetail ? ' - ' + langDetail : ''} &middot; Duolingo Score: <strong>129</strong>`;
+            div.appendChild(span);
+
+            const duoLink = document.createElement('a');
+            duoLink.href = 'https://www.duolingo.com/profile/gssriram?via=share_profile_link';
+            duoLink.target = '_blank';
+            duoLink.rel = 'noopener noreferrer';
+            duoLink.style.cssText = `display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:${primary};`;
+            duoLink.innerHTML = `<img src="https://d35aaqx5ub95lt.cloudfront.net/favicon.ico" alt="Duolingo" style="width:16px;height:16px;background:transparent;">See on Duolingo`;
+            div.appendChild(duoLink);
+
+            langContainer.appendChild(div);
+
+            const proofWrap = document.createElement('div');
+            proofWrap.className = 'lang-item';
+            proofWrap.style.cssText = 'margin-top:0.75rem;';
+            const proofLabel = document.createElement('p');
+            proofLabel.style.cssText = `font-size:13px;color:#6b7280;margin-bottom:0.5rem;`;
+            proofLabel.textContent = 'Proof of English Proficiency';
+            proofWrap.appendChild(proofLabel);
+
+            const proofGrid = document.createElement('div');
+            proofGrid.style.cssText = 'display:flex;flex-wrap:wrap;justify-content:center;gap:16px;';
+            proofWrap.appendChild(proofGrid);
+            langContainer.appendChild(proofWrap);
+
+            const englishCertIds = [22, 27]; // EF SET (Feb 2026), Naukri (Jan 2026) — latest first
+            englishCertIds.forEach(id => {
+              const cert = CERTIFICATES_DATA.find(c => c.id === id);
+              if (cert) {
+                const card = buildCertCard(cert, { key: 'skills' });
+                card.style.width = '260px';
+                proofGrid.appendChild(card);
+              }
+            });
+
+            const langSeeAllWrap = document.createElement('div');
+            langSeeAllWrap.style.cssText = 'text-align:center;margin-top:1.5rem;';
+            langSeeAllWrap.innerHTML = `<a href="https://www.linkedin.com/in/gssriramofficial/details/languages/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:${primary};font-size:0.875rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2" style="flex-shrink:0;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>See all on LinkedIn &rarr;</a>`;
+            langContainer.appendChild(langSeeAllWrap);
+
+            return;
+          }
+
+          const p = document.createElement('p');
+          p.className = 'lang-item';
+          if (langDetail) {
+            p.innerHTML = `<strong>${langName}</strong> - ${langDetail}`;
+          } else {
+            p.innerHTML = `<strong>${langName}</strong>`;
           }
           p.style.fontSize = fs + 'px';
           p.style.color = text;
@@ -892,6 +1794,12 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
         footerText.style.fontSize = (fs * 0.8125) + 'px';
         footerText.style.fontFamily = fontStack;
       }
+
+      // --- Certificates section (renders once; pure CSS-var driven after that) ---
+      if (!window.__certsRendered) {
+        renderCertificates();
+        window.__certsRendered = true;
+      }
     }
 
     // ================================================================
@@ -930,6 +1838,7 @@ I am currently an Intern at Infosys Springboard, where I continue to gain practi
         ["about_description",           config.about_description           || defaultConfig.about_description],
         ["skills_title",                config.skills_title                || defaultConfig.skills_title],
         ["skills_list",                 config.skills_list                 || defaultConfig.skills_list],
+        ["basic_skills_list",           config.basic_skills_list           || defaultConfig.basic_skills_list],
         ["education_title",             config.education_title             || defaultConfig.education_title],
         ["education_1",                 config.education_1                 || defaultConfig.education_1],
         ["education_2",                 config.education_2                 || defaultConfig.education_2],
