@@ -2,7 +2,7 @@
 
 Live site: **[gssriram.live](https://gssriram.live/)**
 
-Personal portfolio and single-page resume site for **Sriram G S**, B.Tech Information Technology student at Karpagam College of Engineering (KCE), Coimbatore, and competitive programmer with 1770+ problems solved across LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas.
+Personal portfolio and single-page resume site for **Sriram G S**, B.Tech Information Technology student at Karpagam College of Engineering (KCE), Coimbatore, and competitive programmer with 2000+ problems solved across LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas.
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ Personal portfolio and single-page resume site for **Sriram G S**, B.Tech Inform
 - 🗺️ `sitemap.xml` and `robots.txt` configured for search engine and AI crawler discovery
 - 🔗 Consolidated links to coding profiles (LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, Code360), academic profiles (ORCID, Google Scholar, ResearchGate), and social/professional profiles (GitHub, LinkedIn, X, Instagram, Facebook, Medium, Notion, Canva)
 - 📄 Downloadable resume (`/resume.pdf`)
-- 🖱️ Interactive sections: About, Education, Skills, Experience, Achievements, Certifications, Contact
+- 🖱️ Interactive sections: Home, Education, Skills, Projects, Technical Profiles, Work Experience, Certifications, Achievements, Contact
 
 ## Project Structure
 
@@ -38,6 +38,6 @@ This site is deployed via **GitHub Pages** on the custom domain `gssriram.live` 
 
 ## Contact
 
-- 📧 [gssriramofficial@gmail.com](mailto:gssriramofficial@gmail.com)
+- 📧 [gssriram9050@gmail.com](mailto:gssriram9050@gmail.com)
 - 💼 [linkedin.com/in/gssriramofficial](https://linkedin.com/in/gssriramofficial)
 - 🐙 [github.com/gssriram9050](https://github.com/gssriram9050)
