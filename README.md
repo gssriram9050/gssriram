@@ -39,5 +39,5 @@ This site is deployed via **GitHub Pages** on the custom domain `gssriram.live` 
 ## Contact
 
 - 📧 [gssriram9050@gmail.com](mailto:gssriram9050@gmail.com)
-- 💼 [linkedin.com/in/gssriramofficial](https://linkedin.com/in/gssriramofficial)
+- 💼 [linkedin.com/in/gssriramofficial](https://www.linkedin.com/in/gssriramofficial)
 - 🐙 [github.com/gssriram9050](https://github.com/gssriram9050)

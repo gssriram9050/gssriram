@@ -91,13 +91,13 @@
         "@context": "https://schema.org",
         "@type": "ProfilePage",
         "name": "Sriram G S | Portfolio",
-        "url": "https://gssriram.live",
+        "url": "https://gssriram.live/",
         "dateModified": "2026-09-13T00:00:00Z",
         "mainEntity": {
           "@type": "Person",
           "name": "Sriram G S",
           "alternateName": ["Sriram", "gssriram", "gssriram9050"],
-          "url": "https://gssriram.live",
+          "url": "https://gssriram.live/",
           "image": "https://res.cloudinary.com/dgbnlfbue/image/upload/v1768587469/f2LsXiJLW4U6fMr0xZLYd.1020.IRZXSOY_xtxbif.jpg",
           "jobTitle": "Software Developer & Competitive Programmer",
           "description": "Second-year (3rd semester) B.Tech Information Technology student at Karpagam College of Engineering (KCE), selected Python Developer Intern (Upcoming: Oct 2026 - Dec 2026) at Infosys Springboard, and competitive programmer who has solved 2000+ problems across LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth, and Coding Ninjas.",
@@ -141,7 +141,7 @@
           ],
           "sameAs": [
             "https://github.com/gssriram9050",
-            "https://linkedin.com/in/gssriramofficial",
+            "https://www.linkedin.com/in/gssriramofficial",
             "https://g.dev/gssriram",
             "https://geeksforgeeks.org/profile/gssriram",
             "https://orcid.org/0009-0008-9371-5318",
@@ -160,14 +160,16 @@
             "https://atcoder.jp/users/gssriram",
             "https://www.interviewbit.com/profile/sriram-g-s",
             "https://www.naukri.com/code360/profile/gssriram",
-            "https://www.codingninjas.com/studio/profile/gssriram",
             "https://codolio.com/profile/gssriram",
             "https://facebook.com/gssriram9050",
             "https://instagram.com/gssriram9050",
             "https://www.duolingo.com/profile/gssriram",
             "https://www.chess.com/member/gssriram9050",
             "https://lichess.org/@/gssriram9050",
-            "https://matiks.com/profile/gssriram"
+            "https://matiks.com/profile/gssriram",
+            "https://www.youtube.com/@gssriram9050",
+            "https://topmate.io/gssriram",
+            "https://linktr.ee/gssriram"
           ]
         }
       }
@@ -407,6 +409,15 @@
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       }
 
+      .exp-badge {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: default;
+      }
+      .exp-badge:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+
       .edu-item,
       .cert-item,
       .lang-item,
@@ -437,20 +448,6 @@
         to {
           opacity: 1;
           transform: scale(1);
-        }
-      }
-
-      .stagger-animation {
-        animation: staggerFade 0.5s ease-out backwards;
-      }
-      @keyframes staggerFade {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
         }
       }
 
@@ -812,33 +809,229 @@
         overflow: hidden;
       }
 
+      /* ============================================================== */
+      /* GLOBAL RESPONSIVE SAFETY NET                                    */
+      /* Prevents horizontal overflow from long words/URLs and keeps     */
+      /* hero typography comfortable at very small widths, without       */
+      /* touching layout, colors, or spacing on desktop/laptop.          */
+      /* ============================================================== */
+      #hero-tagline,
+      .contact-item span,
+      .contact-item a {
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+      @media (max-width: 479px) {
+        #hero-name {
+          font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
+        }
+        #hero-tagline {
+          font-size: clamp(0.9rem, 3.6vw, 1.125rem) !important;
+        }
+      }
+
       @media (max-width: 640px) {
         .cert-grid {
           grid-template-columns: 1fr;
         }
       }
 
-      /* Larger displays: keep the nav on a single centered line instead   */
-      /* of wrapping to two rows. Only the navbar widens — the rest of the */
-      /* site keeps its original, more readable content width.            */
-      @media (min-width: 1200px) {
+      /* ============================================================== */
+      /* RESPONSIVE NAVBAR                                               */
+      /* Desktop/laptop (>=1024px): single-line row, unchanged in spirit */
+      /* from the original design, just fluid so it keeps fitting on    */
+      /* one line down to 1024px instead of only above 1200px.          */
+      /* Tablet/mobile (<1024px): compact "☰ Sriram G S" header that     */
+      /* expands the same nav buttons into a dropdown menu.              */
+      /* ============================================================== */
+      .navbar-toggle-row {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .navbar-brand {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #e5e5e5;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .navbar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border: 1px solid rgba(107, 114, 128, 0.35);
+        border-radius: 0.5rem;
+        background-color: transparent;
+        color: #e5e5e5;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .navbar-toggle-btn:hover {
+        background-color: rgba(59, 130, 246, 0.15);
+      }
+      .navbar-toggle-btn:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+      }
+      .navbar-toggle-icon {
+        display: block;
+        width: 22px;
+        height: 16px;
+        position: relative;
+      }
+      .navbar-toggle-icon span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background-color: currentColor;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .navbar-toggle-icon span:nth-child(1) {
+        top: 0;
+      }
+      .navbar-toggle-icon span:nth-child(2) {
+        top: 7px;
+      }
+      .navbar-toggle-icon span:nth-child(3) {
+        top: 14px;
+      }
+      #navbar.nav-open .navbar-toggle-icon span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      #navbar.nav-open .navbar-toggle-icon span:nth-child(2) {
+        opacity: 0;
+      }
+      #navbar.nav-open .navbar-toggle-icon span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      /* Desktop / laptop: fluid single-line nav from 1024px up. */
+      @media (min-width: 1024px) {
         #navbar .max-w-4xl {
           max-width: 78rem;
         }
-        #navbar .flex.justify-center {
+        #navbar #navbar-menu {
+          display: flex !important;
           flex-wrap: nowrap;
           white-space: nowrap;
-          gap: 0.375rem;
+          gap: clamp(0.3rem, 0.5vw, 0.5rem);
         }
         #navbar .nav-btn {
-          padding-left: 0.85rem;
-          padding-right: 0.85rem;
-          font-size: 0.9rem;
+          padding-left: clamp(0.55rem, 0.9vw, 0.85rem);
+          padding-right: clamp(0.55rem, 0.9vw, 0.85rem);
+          font-size: clamp(0.8rem, 0.6vw + 0.65rem, 0.9rem);
         }
+      }
+
+      /* Tablet / mobile: collapse into a hamburger-triggered dropdown. */
+      @media (max-width: 1023.98px) {
+        .navbar-toggle-row {
+          display: flex;
+        }
+        #navbar-menu {
+          display: none;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          align-items: stretch;
+          justify-content: flex-start;
+          gap: 0.375rem;
+          margin-top: 14px;
+          max-height: min(70vh, 480px);
+          overflow-y: auto;
+        }
+        #navbar.nav-open #navbar-menu {
+          display: flex;
+        }
+        #navbar-menu .nav-btn {
+          width: 100%;
+          text-align: left;
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
+          min-height: 44px;
+        }
+      }
+
+      /* ============================================================== */
+      /* CUSTOM CURSOR                                                   */
+      /* A small solid dot plus a thin ring, both tracking the pointer   */
+      /* directly (no trailing/easing) so it reads as an ordinary,       */
+      /* instant-response cursor with a subtle blue-accent design.       */
+      /* Hover feedback is a small scale/opacity change only — no size   */
+      /* jump, no glow. Only ever activated by the JS at the bottom       */
+      /* (which checks for a fine pointer + hover support), so            */
+      /* touch/tablet/mobile devices keep the normal system cursor and    */
+      /* never load any of this.                                         */
+      /* ============================================================== */
+      html.custom-cursor-active,
+      html.custom-cursor-active * {
+        cursor: none;
+      }
+      .custom-cursor-dot,
+      .custom-cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        will-change: transform;
+        transition: opacity 0.15s ease;
+      }
+      .custom-cursor-dot {
+        width: 5px;
+        height: 5px;
+        margin: -2.5px 0 0 -2.5px;
+        border-radius: 50%;
+        background-color: #3b82f6;
+      }
+      /* .custom-cursor-ring is a plain positioning wrapper: only ever
+         moved with translate(), no transition, so it always tracks the
+         pointer with zero delay. The visible circle + hover animation
+         live on the inner element instead, so scaling it on hover never
+         touches (or delays) the wrapper's position. */
+      .custom-cursor-ring {
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+      }
+      .custom-cursor-ring-inner {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 1.5px solid rgba(59, 130, 246, 0.55);
+        transform: scale(1);
+        transition:
+          transform 0.12s ease,
+          border-color 0.12s ease;
+      }
+      html.custom-cursor-active .custom-cursor-dot,
+      html.custom-cursor-active .custom-cursor-ring {
+        opacity: 1;
+      }
+      .custom-cursor-ring.custom-cursor-hover .custom-cursor-ring-inner {
+        transform: scale(1.3);
+        border-color: rgba(59, 130, 246, 0.9);
       }
     </style>
   </head>
   <body>
+    <!-- Custom cursor (dot + ring). Hidden by default via opacity:0;      -->
+    <!-- only shown once script.js confirms a fine pointer + hover        -->
+    <!-- support and adds .custom-cursor-active to <html>. Purely visual, -->
+    <!-- pointer-events:none, so it never intercepts clicks/scrolling.    -->
+    <div class="custom-cursor-dot" id="custom-cursor-dot" aria-hidden="true"></div>
+    <div class="custom-cursor-ring" id="custom-cursor-ring" aria-hidden="true">
+      <span class="custom-cursor-ring-inner"></span>
+    </div>
     <!-- ============================================================ -->
     <!-- PRIMARY NAVIGATION                                            -->
     <!-- Sticky top nav bar that switches between the four page        -->
@@ -850,7 +1043,21 @@
       style="position: sticky; top: 0; z-index: 100; background-color: #1a1a1a; border-color: rgba(107, 114, 128, 0.25)"
     >
       <div class="max-w-4xl mx-auto px-6 py-4">
-        <div class="flex justify-center gap-2 flex-wrap">
+        <div class="navbar-toggle-row">
+          <span class="navbar-brand" id="navbar-brand">Sriram G S</span>
+          <button
+            type="button"
+            id="navbar-toggle-btn"
+            class="navbar-toggle-btn"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            aria-controls="navbar-menu"
+            onclick="toggleNavMenu()"
+          >
+            <span class="navbar-toggle-icon"><span></span><span></span><span></span></span>
+          </button>
+        </div>
+        <div class="flex justify-center gap-2 flex-wrap" id="navbar-menu">
           <button
             onclick="navigateToPage('home')"
             class="nav-btn px-4 py-2 rounded-lg font-medium active"
@@ -1375,7 +1582,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   ><strong>English</strong> - Professional Working &middot; Duolingo Score: <strong>129</strong></span
                 >
                 <a
-                  href="https://www.duolingo.com/profile/gssriram?via=share_profile_link"
+                  href="https://www.duolingo.com/profile/gssriram"
                   target="_blank"
                   rel="noopener noreferrer"
                   style="display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #3b82f6"
@@ -1393,8 +1600,8 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
 
         <!-- ============================================================ -->
         <!-- PROJECTS SECTION (Projects page)                              -->
-        <!-- Placeholder — no content provided yet. Add project cards      -->
-        <!-- here later; nav + page toggle are already wired up.           -->
+        <!-- Featured project cards (Festraa, Traffic Flow Predictor,       -->
+        <!-- LiFi), each with a live demo link and a GitHub repo link.      -->
         <!-- ============================================================ -->
         <div id="page-projects" class="page-content" style="display: none">
           <h2 class="mb-8 font-bold text-center page-title" style="color: var(--text)">Projects</h2>
@@ -1590,8 +1797,9 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
 
         <!-- ============================================================ -->
         <!-- TECHNICAL PROFILES SECTION (Technical Profiles page)          -->
-        <!-- Placeholder — no content provided yet. Add LeetCode/GitHub/   -->
-        <!-- Codeforces-style profile links here later.                    -->
+        <!-- Codolio, coding-judge profiles (LeetCode, GFG, CodeChef,       -->
+        <!-- Codeforces, Code360, InterviewBit, AtCoder, HackerRank), plus  -->
+        <!-- chess (Chess.com, Lichess) and Matiks profile links.           -->
         <!-- ============================================================ -->
         <div id="page-technical-profiles" class="page-content" style="display: none">
           <h2 class="mb-8 font-bold text-center page-title" style="color: var(--text)">Technical Profiles</h2>
@@ -1712,7 +1920,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   target="_blank"
                   rel="noopener noreferrer"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >Code360 by Coding Ninjas</a
+                  >Code360</a
                 >
               </div>
               <div
@@ -1894,6 +2102,22 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 <div class="flex items-start gap-3">
                   <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
                   <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #c4b5fd;
+                        background: rgba(139, 92, 246, 0.12);
+                        border: 1px solid rgba(139, 92, 246, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Internship</span
+                    ><br />
                     <h3>Infosys Springboard</h3><br />
                     <span style="opacity: 0.9">Python Developer Intern (Upcoming)</span><br />
                     <span style="color: #6b7280; font-size: 0.875rem"
@@ -1910,6 +2134,182 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 <div class="flex items-start gap-3">
                   <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
                   <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #93c5fd;
+                        background: rgba(59, 130, 246, 0.12);
+                        border: 1px solid rgba(59, 130, 246, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Leadership</span
+                    ><br />
+                    <h3>Unstop</h3><br />
+                    <span style="opacity: 0.9">Campus Champion</span><br />
+                    <span style="color: #6b7280; font-size: 0.875rem">Aug 2026 - Present</span>
+                    <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
+                      Campus Champion representing Unstop and engaging with student opportunities and initiatives.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
+                  <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #93c5fd;
+                        background: rgba(59, 130, 246, 0.12);
+                        border: 1px solid rgba(59, 130, 246, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Leadership</span
+                    ><br />
+                    <h3>Internshala</h3><br />
+                    <span style="opacity: 0.9">Student Partner</span><br />
+                    <span style="color: #6b7280; font-size: 0.875rem">Aug 2026 - Present</span>
+                    <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
+                      Student Partner representing Internshala and engaging with campus opportunities and
+                      initiatives.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
+                  <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #86efac;
+                        background: rgba(34, 197, 94, 0.12);
+                        border: 1px solid rgba(34, 197, 94, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Community</span
+                    ><br />
+                    <h3>Red Hat Open Source Club &ndash; Karpagam College of Engineering</h3><br />
+                    <span style="opacity: 0.9">Member</span><br />
+                    <span style="color: #6b7280; font-size: 0.875rem">Aug 2026 - Present</span>
+                    <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
+                      Member of the Red Hat Open Source Club, exploring Linux, open source, cloud computing, DevOps,
+                      automation, containers, and emerging technologies through club activities and learning
+                      opportunities.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
+                  <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #fdba74;
+                        background: rgba(249, 115, 22, 0.12);
+                        border: 1px solid rgba(249, 115, 22, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Open Source Contribution</span
+                    ><br />
+                    <h3>Notepad++</h3><br />
+                    <span style="opacity: 0.9">Open Source Contributor</span><br />
+                    <span style="color: #6b7280; font-size: 0.875rem">Jun 2026 - Present</span>
+                    <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
+                      Contributed to the official Notepad++ open-source project by improving Tamil localization.
+                      Submitted a pull request that was reviewed, approved, and merged into the official repository.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.6rem">
+                      <a
+                        href="https://github.com/notepad-plus-plus/notepad-plus-plus"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="
+                          text-decoration: none;
+                          color: #93c5fd;
+                          font-size: 0.75rem;
+                          font-weight: 600;
+                          border: 1px solid rgba(59, 130, 246, 0.3);
+                          background: rgba(59, 130, 246, 0.08);
+                          padding: 4px 10px;
+                          border-radius: 6px;
+                          display: inline-flex;
+                          align-items: center;
+                          gap: 4px;
+                        "
+                        >Repository &rarr;</a
+                      >
+                      <a
+                        href="https://github.com/notepad-plus-plus/notepad-plus-plus/pulls?q=is%3Apr+author%3Agssriram9050"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="
+                          text-decoration: none;
+                          color: #93c5fd;
+                          font-size: 0.75rem;
+                          font-weight: 600;
+                          border: 1px solid rgba(59, 130, 246, 0.3);
+                          background: rgba(59, 130, 246, 0.08);
+                          padding: 4px 10px;
+                          border-radius: 6px;
+                          display: inline-flex;
+                          align-items: center;
+                          gap: 4px;
+                        "
+                        >My Contributions &rarr;</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
+                  <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #c4b5fd;
+                        background: rgba(139, 92, 246, 0.12);
+                        border: 1px solid rgba(139, 92, 246, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Internship</span
+                    ><br />
                     <h3>Thiranex</h3><br />
                     <span style="opacity: 0.9">Full Stack Developer Intern</span><br />
                     <span style="color: #6b7280; font-size: 0.875rem"
@@ -1926,6 +2326,22 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 <div class="flex items-start gap-3">
                   <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
                   <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #c4b5fd;
+                        background: rgba(139, 92, 246, 0.12);
+                        border: 1px solid rgba(139, 92, 246, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Internship</span
+                    ><br />
                     <h3>Way2me</h3><br />
                     <span style="opacity: 0.9">Web Developer Intern</span><br />
                     <span style="color: #6b7280; font-size: 0.875rem"
@@ -1934,6 +2350,36 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                     <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
                       Built responsive frontend components with HTML, CSS, and JavaScript for a live consumer-facing web
                       application.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0" style="background: #3b82f6"></div>
+                  <div class="flex-1">
+                    <span
+                      class="exp-badge"
+                      style="
+                        display: inline-block;
+                        font-size: 0.6875rem;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        color: #86efac;
+                        background: rgba(34, 197, 94, 0.12);
+                        border: 1px solid rgba(34, 197, 94, 0.25);
+                        padding: 2px 9px;
+                        border-radius: 6px;
+                        margin-bottom: 6px;
+                      "
+                      >Community</span
+                    ><br />
+                    <h3>AWS Student Builder Group &ndash; Karpagam College of Engineering</h3><br />
+                    <span style="opacity: 0.9">Member</span><br />
+                    <span style="color: #6b7280; font-size: 0.875rem">Jan 2026 - Present</span>
+                    <p style="margin-top: 0.5rem; color: #a3a3a3; font-size: 0.9rem; line-height: 1.5">
+                      Member of the AWS Student Builder Group, exploring AWS and cloud technologies through club
+                      meetings and learning activities.
                     </p>
                   </div>
                 </div>
@@ -2114,6 +2560,20 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 >
               </div>
               <div class="contact-item flex items-center justify-center gap-2">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/zoho.svg"
+                  alt="Zoho Mail"
+                  style="width: 20px; height: 20px; flex-shrink: 0"
+                />
+                <a
+                  id="contact-email-zoho"
+                  href="mailto:gssriram@gssriram.live"
+                  aria-label="Email Sriram"
+                  style="text-decoration: none; color: #3b82f6"
+                  >gssriram@gssriram.live</a
+                >
+              </div>
+              <div class="contact-item flex items-center justify-center gap-2">
                 <svg
                   class="flex-shrink-0"
                   width="20"
@@ -2135,21 +2595,6 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 >
               </div>
               <div class="contact-item flex items-center justify-center gap-2">
-                <img
-                  src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/zoho.svg"
-                  alt="Zoho Mail"
-                  style="width: 20px; height: 20px; flex-shrink: 0"
-                />
-                <a
-                  id="contact-email-zoho"
-                  href="mailto:gssriram@gssriram.live"
-                  aria-label="Email Sriram"
-                  style="text-decoration: none; color: #3b82f6"
-                  >gssriram@gssriram.live</a
-                >
-              </div>
-
-              <div class="contact-item flex items-center justify-center gap-2">
                 <svg
                   class="flex-shrink-0"
                   width="20"
@@ -2164,81 +2609,12 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 </svg>
                 <a
                   id="contact-linkedin"
-                  href="https://linkedin.com/in/gssriramofficial"
+                  href="https://www.linkedin.com/in/gssriramofficial"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="View Sriram's LinkedIn profile"
                   style="text-decoration: none; color: #3b82f6"
-                  >linkedin.com/in/gssriramofficial</a
-                >
-              </div>
-              <div class="contact-item flex items-center justify-center gap-2">
-                <svg
-                  class="flex-shrink-0"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  style="margin-top: 2px; color: #e5e5e5"
-                >
-                  <path
-                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-                  />
-                </svg>
-                <a
-                  id="contact-github"
-                  href="https://github.com/gssriram9050"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View Sriram's GitHub profile"
-                  style="text-decoration: none; color: #3b82f6"
-                  >github.com/gssriram9050</a
-                >
-              </div>
-              <div class="contact-item flex items-center justify-center gap-2">
-                <svg
-                  class="flex-shrink-0"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="#1877F2"
-                  style="margin-top: 2px"
-                >
-                  <path
-                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-                  />
-                </svg>
-                <a
-                  id="contact-facebook"
-                  href="https://facebook.com/gssriram9050"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View Sriram's Facebook profile"
-                  style="text-decoration: none; color: #3b82f6"
-                  >facebook.com/gssriram9050</a
-                >
-              </div>
-              <div class="contact-item flex items-center justify-center gap-2">
-                <svg
-                  class="flex-shrink-0"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="#E4405F"
-                  style="margin-top: 2px"
-                >
-                  <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                  />
-                </svg>
-                <a
-                  id="contact-instagram"
-                  href="https://instagram.com/gssriram9050"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View Sriram's Instagram profile"
-                  style="text-decoration: none; color: #3b82f6"
-                  >instagram.com/gssriram9050</a
+                  >LinkedIn</a
                 >
               </div>
               <div class="contact-item flex items-center justify-center gap-2">
@@ -2261,7 +2637,175 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   rel="noopener noreferrer"
                   aria-label="View Sriram's X (Twitter) profile"
                   style="text-decoration: none; color: #3b82f6"
-                  >x.com/gssriram9050</a
+                  >X (Twitter)</a
+                >
+              </div>
+              <div class="contact-item flex items-center justify-center gap-2">
+                <svg
+                  class="flex-shrink-0"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style="margin-top: 2px; color: #e5e5e5"
+                >
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                  />
+                </svg>
+                <a
+                  id="contact-github"
+                  href="https://github.com/gssriram9050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View Sriram's GitHub profile"
+                  style="text-decoration: none; color: #3b82f6"
+                  >GitHub</a
+                >
+              </div>
+              <div class="contact-item flex items-center justify-center gap-2">
+                <svg
+                  class="flex-shrink-0"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="#E4405F"
+                  style="margin-top: 2px"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
+                </svg>
+                <a
+                  id="contact-instagram"
+                  href="https://instagram.com/gssriram9050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View Sriram's Instagram profile"
+                  style="text-decoration: none; color: #3b82f6"
+                  >Instagram</a
+                >
+              </div>
+              <div class="contact-item flex items-center justify-center gap-2">
+                <svg
+                  class="flex-shrink-0"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="#1877F2"
+                  style="margin-top: 2px"
+                >
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                  />
+                </svg>
+                <a
+                  id="contact-facebook"
+                  href="https://facebook.com/gssriram9050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View Sriram's Facebook profile"
+                  style="text-decoration: none; color: #3b82f6"
+                  >Facebook</a
+                >
+              </div>
+              <div
+                class="contact-item flex items-center justify-center gap-2"
+                onclick="window.open('https://www.youtube.com/@gssriram9050', '_blank')"
+                style="cursor: pointer"
+                role="link"
+                tabindex="0"
+                aria-label="View Sriram's YouTube channel"
+              >
+                <svg
+                  class="flex-shrink-0"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="#FF0000"
+                  style="margin-top: 2px; pointer-events: none"
+                >
+                  <path
+                    d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.391.524A2.994 2.994 0 0 0 .502 6.186 31.02 31.02 0 0 0 0 12a31.02 31.02 0 0 0 .502 5.814 2.994 2.994 0 0 0 2.107 2.117c1.886.524 9.391.524 9.391.524s7.505 0 9.391-.524a2.994 2.994 0 0 0 2.107-2.117A31.02 31.02 0 0 0 24 12a31.02 31.02 0 0 0-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"
+                  />
+                </svg>
+                <a
+                  href="https://www.youtube.com/@gssriram9050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
+                  >YouTube</a
+                >
+              </div>
+              <div
+                class="contact-item flex items-center justify-center gap-2"
+                onclick="window.open('https://topmate.io/gssriram', '_blank')"
+                style="cursor: pointer"
+                role="link"
+                tabindex="0"
+                aria-label="View Sriram's Topmate profile"
+              >
+                <img
+                  src="https://topmate.io/favicon.svg"
+                  alt="Topmate"
+                  style="width: 20px; height: 20px; flex-shrink: 0; pointer-events: none"
+                />
+                <a
+                  href="https://topmate.io/gssriram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
+                  >Topmate</a
+                >
+              </div>
+              <div
+                class="contact-item flex items-center justify-center gap-2"
+                onclick="window.open('https://linktr.ee/gssriram', '_blank')"
+                style="cursor: pointer"
+                role="link"
+                tabindex="0"
+                aria-label="View Sriram's Linktree"
+              >
+                <img
+                  src="https://www.google.com/s2/favicons?domain=linktr.ee&sz=64"
+                  alt="Linktree"
+                  style="width: 20px; height: 20px; flex-shrink: 0; pointer-events: none"
+                />
+                <a
+                  href="https://linktr.ee/gssriram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
+                  >Linktree</a
+                >
+              </div>
+              <div
+                class="contact-item flex items-center justify-center gap-2"
+                onclick="window.open('https://g.dev/gssriram', '_blank')"
+                style="cursor: pointer"
+                role="link"
+                tabindex="0"
+                aria-label="View Sriram's Google Developer profile"
+              >
+                <img
+                  src="https://www.google.com/s2/favicons?domain=g.dev&sz=64"
+                  alt="Google Developer Profile"
+                  style="width: 20px; height: 20px; flex-shrink: 0; pointer-events: none"
+                />
+                <a
+                  href="https://g.dev/gssriram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
+                  >Google Developer</a
                 >
               </div>
               <div
@@ -2291,30 +2835,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >stackoverflow.com/users/32640068</a
-                >
-              </div>
-              <div
-                class="contact-item flex items-center justify-center gap-2"
-                onclick="window.open('https://g.dev/gssriram', '_blank')"
-                style="cursor: pointer"
-                role="link"
-                tabindex="0"
-                aria-label="View Sriram's Google Developer profile"
-              >
-                <img
-                  src="https://www.google.com/s2/favicons?domain=g.dev&sz=64"
-                  alt="Google Developer Profile"
-                  style="width: 20px; height: 20px; flex-shrink: 0; pointer-events: none"
-                />
-                <a
-                  href="https://g.dev/gssriram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-hidden="true"
-                  tabindex="-1"
-                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >g.dev/gssriram</a
+                  >Stack Overflow</a
                 >
               </div>
               <div
@@ -2344,7 +2865,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >orcid.org/0009-0008-9371-5318</a
+                  >ORCID</a
                 >
               </div>
               <div
@@ -2404,37 +2925,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >researchgate.net/profile/Sriram-G-S</a
-                >
-              </div>
-              <div
-                class="contact-item flex items-center justify-center gap-2"
-                onclick="window.open('https://gssriram.blogspot.com/', '_blank')"
-                style="cursor: pointer"
-                role="link"
-                tabindex="0"
-                aria-label="View Sriram's Blogspot"
-              >
-                <svg
-                  class="flex-shrink-0"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="#FF5722"
-                  style="margin-top: 2px; pointer-events: none"
-                >
-                  <path
-                    d="M21.976 24H2.026C.9 24 0 23.1 0 21.976V2.026C0 .9.9 0 2.025 0H22.05C23.1 0 24 .9 24 2.025v19.95C24 23.1 23.1 24 21.976 24zM12 3.975H9c-2.775 0-5.025 2.25-5.025 5.025v6c0 2.774 2.25 5.024 5.025 5.024h6c2.774 0 5.024-2.25 5.024-5.024v-3.975c0-.6-.45-1.05-1.05-1.05H18c-.524 0-.976-.45-.976-.976 0-2.776-2.25-5.026-5.024-5.026zm3.074 12H9c-.525 0-.975-.45-.975-.975s.45-.976.975-.976h6.074c.526 0 .977.45.977.976s-.45.976-.975.976zm-2.55-7.95c.527 0 .976.45.976.975s-.45.975-.975.975h-3.6c-.525 0-.976-.45-.976-.975s.45-.975.975-.975h3.6z"
-                  />
-                </svg>
-                <a
-                  href="https://gssriram.blogspot.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-hidden="true"
-                  tabindex="-1"
-                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >gssriram.blogspot.com</a
+                  >ResearchGate</a
                 >
               </div>
               <div
@@ -2464,7 +2955,37 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >gssriram.medium.com</a
+                  >Medium</a
+                >
+              </div>
+              <div
+                class="contact-item flex items-center justify-center gap-2"
+                onclick="window.open('https://gssriram.blogspot.com/', '_blank')"
+                style="cursor: pointer"
+                role="link"
+                tabindex="0"
+                aria-label="View Sriram's Blogspot"
+              >
+                <svg
+                  class="flex-shrink-0"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="#FF5722"
+                  style="margin-top: 2px; pointer-events: none"
+                >
+                  <path
+                    d="M21.976 24H2.026C.9 24 0 23.1 0 21.976V2.026C0 .9.9 0 2.025 0H22.05C23.1 0 24 .9 24 2.025v19.95C24 23.1 23.1 24 21.976 24zM12 3.975H9c-2.775 0-5.025 2.25-5.025 5.025v6c0 2.774 2.25 5.024 5.025 5.024h6c2.774 0 5.024-2.25 5.024-5.024v-3.975c0-.6-.45-1.05-1.05-1.05H18c-.524 0-.976-.45-.976-.976 0-2.776-2.25-5.026-5.024-5.026zm3.074 12H9c-.525 0-.975-.45-.975-.975s.45-.976.975-.976h6.074c.526 0 .977.45.977.976s-.45.976-.975.976zm-2.55-7.95c.527 0 .976.45.976.975s-.45.975-.975.975h-3.6c-.525 0-.976-.45-.976-.975s.45-.975.975-.975h3.6z"
+                  />
+                </svg>
+                <a
+                  href="https://gssriram.blogspot.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  style="text-decoration: none; color: #3b82f6; pointer-events: none"
+                  >Blogspot</a
                 >
               </div>
               <div
@@ -2487,7 +3008,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >gssriram.my.canva.site (Canva Portfolio)</a
+                  >Canva Portfolio</a
                 >
               </div>
               <div
@@ -2517,7 +3038,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                   aria-hidden="true"
                   tabindex="-1"
                   style="text-decoration: none; color: #3b82f6; pointer-events: none"
-                  >gssriram.notion.site/gssriram (Notion Portfolio)</a
+                  >Notion Portfolio</a
                 >
               </div>
             </div>
@@ -2684,6 +3205,35 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
       // by onConfigChange() to format and inject dynamic content.
       // ================================================================
 
+      // Mobile/tablet dropdown menu: toggled by the compact "☰ Sriram G S"
+      // header (see .navbar-toggle-row / #navbar-menu CSS above). Only
+      // affects layout below the 1024px breakpoint; on desktop/laptop
+      // #navbar-menu is always visible via CSS and this class is inert.
+      function toggleNavMenu(forceOpen) {
+        const navbar = document.getElementById("navbar");
+        const toggleBtn = document.getElementById("navbar-toggle-btn");
+        if (!navbar || !toggleBtn) return;
+        const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : !navbar.classList.contains("nav-open");
+        navbar.classList.toggle("nav-open", shouldOpen);
+        toggleBtn.setAttribute("aria-expanded", String(shouldOpen));
+      }
+
+      // Close the mobile menu on outside click, Escape, and whenever the
+      // viewport is resized back up to the desktop/laptop breakpoint so it
+      // never gets stuck open.
+      document.addEventListener("click", (e) => {
+        const navbar = document.getElementById("navbar");
+        if (navbar && navbar.classList.contains("nav-open") && !navbar.contains(e.target)) {
+          toggleNavMenu(false);
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") toggleNavMenu(false);
+      });
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 1024) toggleNavMenu(false);
+      });
+
       function navigateToPage(pageName, opts) {
         document.querySelectorAll(".page-content").forEach((p) => (p.style.display = "none"));
         const page = document.getElementById("page-" + pageName);
@@ -2692,6 +3242,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
           currentPage = pageName;
         }
         updateNavButtons();
+        toggleNavMenu(false);
         if (!opts || opts.updateHash !== false) {
           const newHash = "#" + pageName;
           if (window.location.hash !== newHash) {
@@ -3502,6 +4053,10 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
           heroName.style.fontSize = fs * 2.5 + "px";
           heroName.style.color = text;
         }
+        const navbarBrand = document.getElementById("navbar-brand");
+        if (navbarBrand) {
+          navbarBrand.textContent = config.hero_name || defaultConfig.hero_name;
+        }
 
         const heroTagline = document.getElementById("hero-tagline");
         if (heroTagline) {
@@ -3642,7 +4197,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
                 div.appendChild(span);
 
                 const duoLink = document.createElement("a");
-                duoLink.href = "https://www.duolingo.com/profile/gssriram?via=share_profile_link";
+                duoLink.href = "https://www.duolingo.com/profile/gssriram";
                 duoLink.target = "_blank";
                 duoLink.rel = "noopener noreferrer";
                 duoLink.style.cssText = `display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:${primary};`;
@@ -3778,8 +4333,8 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
         const cLinkedin = document.getElementById("contact-linkedin");
         if (cLinkedin) {
           const u = config.contact_linkedin || defaultConfig.contact_linkedin;
-          cLinkedin.textContent = "linkedin.com/in/" + u;
-          cLinkedin.href = "https://linkedin.com/in/" + u;
+          cLinkedin.textContent = "LinkedIn";
+          cLinkedin.href = "https://www.linkedin.com/in/" + u;
           cLinkedin.style.color = primary;
           cLinkedin.style.fontSize = fs + "px";
           attachContactItemClickHandler(cLinkedin.closest(".contact-item"), cLinkedin.href);
@@ -3787,7 +4342,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
         const cGithub = document.getElementById("contact-github");
         if (cGithub) {
           const u = config.contact_github || defaultConfig.contact_github;
-          cGithub.textContent = "github.com/" + u;
+          cGithub.textContent = "GitHub";
           cGithub.href = "https://github.com/" + u;
           cGithub.style.color = primary;
           cGithub.style.fontSize = fs + "px";
@@ -3796,7 +4351,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
         const cFacebook = document.getElementById("contact-facebook");
         if (cFacebook) {
           const url = config.contact_facebook || defaultConfig.contact_facebook;
-          cFacebook.textContent = "facebook.com/gssriram9050";
+          cFacebook.textContent = "Facebook";
           cFacebook.href = url;
           cFacebook.style.color = primary;
           cFacebook.style.fontSize = fs + "px";
@@ -3805,7 +4360,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
         const cInstagram = document.getElementById("contact-instagram");
         if (cInstagram) {
           const u = config.contact_instagram || defaultConfig.contact_instagram;
-          cInstagram.textContent = "instagram.com/" + u;
+          cInstagram.textContent = "Instagram";
           cInstagram.href = "https://instagram.com/" + u;
           cInstagram.style.color = primary;
           cInstagram.style.fontSize = fs + "px";
@@ -3814,7 +4369,7 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
         const cX = document.getElementById("contact-x");
         if (cX) {
           const u = config.contact_x || defaultConfig.contact_x;
-          cX.textContent = "x.com/" + u;
+          cX.textContent = "X (Twitter)";
           cX.href = "https://x.com/" + u;
           cX.style.color = primary;
           cX.style.fontSize = fs + "px";
@@ -3975,6 +4530,77 @@ I've been selected as a Python Developer Intern at Infosys Springboard (Oct–De
       document.getElementById("contact-address-item").onclick = () => {
         window.open("https://maps.google.com/?q=" + encodeURIComponent(defaultConfig.contact_address), "_blank");
       };
+
+      // ================================================================
+      // CUSTOM CURSOR — small dot + ring, instant tracking
+      // ================================================================
+      // Only enabled on devices with a fine pointer AND real hover support
+      // (i.e. an actual mouse/trackpad). Touch, tablets, and mobile never
+      // run any of this and keep the normal system cursor untouched.
+      // Purely additive: two fixed, pointer-events:none elements that
+      // track the mouse; nothing here affects clicks, scrolling, text
+      // selection, or focus.
+      // ================================================================
+      (function initCustomCursor() {
+        const supportsCustomCursor = window.matchMedia("(pointer: fine) and (hover: hover)").matches;
+        if (!supportsCustomCursor) return;
+
+        const dot = document.getElementById("custom-cursor-dot");
+        const ring = document.getElementById("custom-cursor-ring");
+        if (!dot || !ring) return;
+
+        document.documentElement.classList.add("custom-cursor-active");
+
+        // Dot and ring both track the pointer directly, with zero delay —
+        // only the small hover scale (handled purely in CSS on the inner
+        // ring element) is animated. This keeps the cursor feeling like a
+        // normal, instant-response pointer.
+        function onMouseMove(e) {
+          const x = e.clientX + "px";
+          const y = e.clientY + "px";
+          dot.style.transform = `translate(${x}, ${y})`;
+          ring.style.transform = `translate(${x}, ${y})`;
+        }
+
+        document.addEventListener("mousemove", onMouseMove, { passive: true });
+
+        // Fade the cursor out when it leaves the window and back in when
+        // it returns, rather than leaving it stuck at the last position.
+        document.addEventListener("mouseleave", () => {
+          dot.style.opacity = "0";
+          ring.style.opacity = "0";
+        });
+        document.addEventListener("mouseenter", () => {
+          dot.style.opacity = "";
+          ring.style.opacity = "";
+        });
+
+        // Small hover feedback over links, buttons, cards, and other
+        // interactive/clickable elements.
+        const HOVER_SELECTOR =
+          'a, button, [role="button"], input, textarea, select, label, .nav-btn, .section-card, ' +
+          ".contact-item, .location-item, .cert-card, .cert-modal-close, .skill-badge, .edu-item, " +
+          ".cert-item, .lang-item, .exp-item, .achievement-item, .interactive-text, .navbar-toggle-btn";
+
+        document.addEventListener(
+          "mouseover",
+          (e) => {
+            if (e.target.closest && e.target.closest(HOVER_SELECTOR)) {
+              ring.classList.add("custom-cursor-hover");
+            }
+          },
+          { passive: true },
+        );
+        document.addEventListener(
+          "mouseout",
+          (e) => {
+            if (e.target.closest && e.target.closest(HOVER_SELECTOR)) {
+              ring.classList.remove("custom-cursor-hover");
+            }
+          },
+          { passive: true },
+        );
+      })();
     </script>
   </body>
 </html>

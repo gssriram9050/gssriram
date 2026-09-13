@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 | Sriram G S</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="The page you're looking for doesn't exist or may have been moved." />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png"
+    />
+    <link
+      rel="shortcut icon"
+      href="https://res.cloudinary.com/dgbnlfbue/image/upload/w_64,h_64,c_fill,r_max/v1781091859/Zoom_Logo_lhszlr.png"
+    />
+
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --surface: #1a1a1a;
+        --text: #e5e5e5;
+        --text-secondary: #6b7280;
+        --primary: #3b82f6;
+        --primary-dark: #2563eb;
+        --border: rgba(107, 114, 128, 0.12);
+        --radius-sm: 8px;
+        --radius-lg: 1rem;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: var(--font-family);
+        padding: 24px;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .not-found-card {
+          animation: fadeSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .not-found-card {
+        width: 100%;
+        max-width: 32rem;
+        text-align: center;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--primary);
+        border-radius: var(--radius-sm);
+        padding: 3rem 2rem;
+      }
+
+      .not-found-code {
+        font-size: clamp(3.5rem, 12vw, 5.5rem);
+        font-weight: 800;
+        line-height: 1;
+        margin: 0 0 0.75rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .not-found-heading {
+        font-size: clamp(1.25rem, 4vw, 1.75rem);
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 0.75rem;
+      }
+
+      .not-found-message {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0 0 1.75rem;
+      }
+
+      .not-found-countdown {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        margin: 0 0 1.75rem;
+        min-height: 1.4em;
+      }
+
+      .not-found-countdown strong {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .not-found-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        transition: var(--transition);
+      }
+      .not-found-btn:hover {
+        box-shadow: 0 12px 28px rgba(59, 130, 246, 0.4);
+        transform: translateY(-2px);
+      }
+      .not-found-btn:active {
+        transform: translateY(0);
+      }
+      .not-found-btn:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 3px;
+      }
+
+      .not-found-brand {
+        margin-top: 2rem;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="not-found-card" role="main">
+      <p class="not-found-code" aria-hidden="true">404</p>
+      <h1 class="not-found-heading">Page Not Found</h1>
+      <p class="not-found-message">The page you're looking for doesn't exist or may have been moved.</p>
+      <p class="not-found-countdown" id="countdown-text" role="status" aria-live="polite">
+        Redirecting to the homepage in <strong id="countdown-seconds">3</strong>
+        <span id="countdown-unit">seconds</span>...
+      </p>
+      <a class="not-found-btn" id="go-home-btn" href="/">Go Home Now</a>
+      <p class="not-found-brand">Sriram G S | Portfolio</p>
+    </main>
+
+    <script>
+      (function () {
+        var HOME_PATH = "/";
+        var secondsLeft = 3;
+        var countdownSecondsEl = document.getElementById("countdown-seconds");
+        var countdownUnitEl = document.getElementById("countdown-unit");
+        var goHomeBtn = document.getElementById("go-home-btn");
+        var intervalId = null;
+
+        function redirectHome() {
+          window.location.href = HOME_PATH;
+        }
+
+        function tick() {
+          secondsLeft -= 1;
+          if (secondsLeft <= 0) {
+            clearInterval(intervalId);
+            redirectHome();
+            return;
+          }
+          countdownSecondsEl.textContent = secondsLeft;
+          countdownUnitEl.textContent = secondsLeft === 1 ? "second" : "seconds";
+        }
+
+        intervalId = setInterval(tick, 1000);
+
+        goHomeBtn.addEventListener("click", function () {
+          if (intervalId) {
+            clearInterval(intervalId);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
