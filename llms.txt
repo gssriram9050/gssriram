@@ -1,0 +1,45 @@
+# Sriram G S
+
+> Sriram G S is a software developer and competitive programmer from Tamil Nadu, India. He is a B.Tech Information Technology student at Karpagam College of Engineering (KCE), Coimbatore (2025–2029), a selected Python Developer Intern at Infosys Springboard (Oct–Dec 2026), and has solved 2000+ problems across LeetCode, CodeChef, Codeforces, GeeksforGeeks, HackerRank, HackerEarth and Coding Ninjas.
+
+This file summarises https://gssriram.live/ for AI assistants and answer engines. The site is a single-page portfolio; its sections are reachable at https://gssriram.live/#home, #education, #skills, #projects, #technical-profiles, #work-experience, #certifications-detail, #achievements and #contact.
+
+## Site
+
+- [Portfolio (home)](https://gssriram.live/): About, education, skills, projects, coding profiles, experience, certificates, achievements, contact
+- [Resume (PDF)](https://gssriram.live/resume.pdf): One-page resume
+- [Profile photo](https://gssriram.live/profile.jpg): Portrait of Sriram G S
+- [XML sitemap](https://gssriram.live/sitemap.xml)
+
+## Quick facts
+
+- Full name: Sriram G S (also: Sriram, gssriram, gssriram9050)
+- Education: B.Tech Information Technology, Karpagam College of Engineering, Coimbatore, 2025–2029; Merit Scholarship (100% tuition fee waiver, 25% hostel fee waiver)
+- Current internship: Python Developer Intern, Infosys Springboard, Bengaluru, Oct 2026 – Dec 2026 (3 months, selected)
+- Past internships: Full Stack Developer Intern at Thiranex, Chennai (May–Jun 2026); Web Developer Intern at Way2me, Namakkal (May–Jun 2026)
+- Open source: merged pull request improving Tamil localization in the official Notepad++ repository
+- Core skills: Data Structures and Algorithms, Python, JavaScript, C++, C, Java, SQL, HTML, CSS, MySQL, MongoDB, Git, AWS, Power BI
+- Competitive programming: 2000+ problems solved; LeetCode 1800+; CodeChef 3★ (1600+) and DSA 4★ (1900+); Codeforces Pupil (1200+); Code360 Specialist (1770+); AtCoder 120+
+- Languages: Tamil (native), English (professional working; Duolingo score 129)
+- Achievement: Google The Big Code 2026, Round 1, Top 15,000
+
+## Projects
+
+- [Festraa](https://gssriram9050.github.io/festraa/): Event booking website with user auth and booking management (HTML, CSS, JavaScript). [Repo](https://github.com/gssriram9050/festraa)
+- [Traffic Flow Predictor & Route Optimizer](https://gssriram9050.github.io/traffic-flow/): Route optimization, congestion forecasting and incident tracking (Python, Flask, OpenStreetMap, OSRM). [Repo](https://github.com/gssriram9050/traffic-flow)
+- [LiFi Communication System](https://gssriram9050.github.io/lifi/): Optical wireless text transmission using LED light pulses and an LDR sensor (C++, Arduino UNO). [Repo](https://github.com/gssriram9050/lifi)
+
+## Profiles
+
+- [GitHub](https://github.com/gssriram9050)
+- [LinkedIn](https://www.linkedin.com/in/gssriramofficial)
+- [LeetCode](https://leetcode.com/u/gssriram)
+- [CodeChef](https://codechef.com/users/gssriram)
+- [Codeforces](https://codeforces.com/profile/gssriramkce)
+- [ORCID](https://orcid.org/0009-0008-9371-5318)
+- [Google Scholar](https://scholar.google.com/citations?hl=en&user=7wODD58AAAAJ)
+
+## Contact
+
+- gssriram@gssriram.live
+- gssriram9050@gmail.com

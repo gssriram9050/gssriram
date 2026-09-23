@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage: single-page app. Sections (#education, #skills, ...) are fragments of this URL,
+       so they are listed in the on-page footer sitemap, not here. -->
   <url>
     <loc>https://gssriram.live/</loc>
-    <lastmod>2026-09-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-09-23</lastmod>
+    <image:image>
+      <image:loc>https://gssriram.live/profile.jpg</image:loc>
+      <image:title>Sriram G S - Professional Photo</image:title>
+      <image:caption>Portrait of Sriram G S, software developer and competitive programmer</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/og-image.jpg</image:loc>
+      <image:title>Sriram G S | Software Developer &amp; Competitive Programmer</image:title>
+      <image:caption>Portfolio preview card for gssriram.live</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/favicon.png</image:loc>
+      <image:title>G.S.Sriram logo</image:title>
+      <image:caption>Site logo and favicon (64x64)</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/favicon-48x48.png</image:loc>
+      <image:title>G.S.Sriram logo (48x48)</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/favicon-32x32.png</image:loc>
+      <image:title>G.S.Sriram logo (32x32)</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/favicon-16x16.png</image:loc>
+      <image:title>G.S.Sriram logo (16x16)</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://gssriram.live/apple-touch-icon.png</image:loc>
+      <image:title>G.S.Sriram logo (180x180)</image:title>
+      <image:caption>Apple touch icon</image:caption>
+    </image:image>
   </url>
+
   <url>
     <loc>https://gssriram.live/resume.pdf</loc>
-    <lastmod>2026-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
+
 </urlset>

@@ -25,10 +25,20 @@ Personal portfolio and single-page resume site for **Sriram G S**, B.Tech Inform
 
 ```
 .
-├── index.html      # Single-page site (markup, styles, and logic)
-├── sitemap.xml     # Search engine sitemap
-├── robots.txt      # Crawler access rules
-├── CNAME           # Custom domain config for GitHub Pages
+├── index.html                     # Single-page site (markup, styles, and logic)
+├── 404.html                       # Custom not-found page (noindex)
+├── resume.pdf                     # Resume (title/author metadata set)
+├── profile.jpg                    # Profile photo
+├── og-image.jpg                   # 1200x630 social preview card
+├── favicon.ico                    # Multi-size (16/32/48/64) icon at site root
+├── favicon.png                    # 64x64 logo
+├── favicon-16x16.png / -32x32.png / -48x48.png
+├── apple-touch-icon.png           # 180x180 iOS icon
+├── sitemap.xml                    # Sitemap incl. image entries
+├── robots.txt                     # Crawler rules (search + AI crawlers)
+├── llms.txt                       # Machine-readable site summary for AI assistants
+├── zoho-domain-verification.html  # Zoho Mail domain verification (do not edit)
+├── CNAME                          # Custom domain config for GitHub Pages
 └── README.md
 ```
 
