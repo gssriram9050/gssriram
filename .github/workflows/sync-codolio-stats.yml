@@ -1,1 +1,279 @@
+name: Sync portfolio coding statistics
 
+on:
+  schedule:
+    # 20:30 UTC = 02:00 IST (Asia/Kolkata, UTC+5:30, no DST), every day
+    - cron: "30 20 * * *"
+    # TEMPORARY test run: 09:51 IST (04:21 UTC) - delete these two lines after the test
+    - cron: "21 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-portfolio-stats
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Codolio stats and update tagline numbers
+        env:
+          COMMIT_MSG_FILE: ${{ runner.temp }}/commit_msg.txt
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/sync_tagline_stats.py" <<'PYEOF'
+          #!/usr/bin/env python3
+          """Sync Codolio stats into the hero tagline numbers of index.html (numbers only).
+
+          Fails closed: any doubt -> exit non-zero, nothing written.
+          """
+          import json, os, re, sys, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          INDEX = "index.html"
+
+          # ---- Codolio source (must be confirmed against the real response) ----------
+          CODOLIO_ENDPOINT = "https://api.codolio.com/profile?userKey=gssriram"
+          EXPECTED_PROFILE = "gssriram"
+          # Codolio publishes no ready-made overall totals: the dashboard derives them from
+          # the per-platform entries below (verified against the live dashboard).
+          PLATFORMS_PATH = ["data", "platformProfiles", "platformProfiles"]
+          # Only the four overall dashboard values are synced; every other tagline number
+          # is left exactly as it is.
+          SYNCED = ("problems", "contests", "active_days", "streak")
+          PATHS = {m: PLATFORMS_PATH for m in SYNCED}
+          # ----------------------------------------------------------------------------
+
+          # metric -> (regex with 3 groups: prefix, NUMBER, suffix; round-down step)
+          STAR = r"\d(?:&#9733;|\\u2605)\s*\("
+          METRICS = {
+              "problems":    (r"()(\d[\d,]*)(\+\s+Problems\s+Solved)", 10),
+              "active_days": (r"()(\d[\d,]*)(\+\s+Active\s+Coding\s+Days)", 10),
+              "streak":      (r"()(\d[\d,]*)(\+\s+Days\s+Current\s+Streak)", 10),
+              "contests":    (r"()(\d[\d,]*)(\+\s+Contests)", 10),
+              "leetcode":    (r"(LeetCode\s+)(\d[\d,]*)(\+)", 100),
+              "codechef":    (r"(CodeChef\s+" + STAR + r")(\d[\d,]*)(\+\))", 100),
+              "dsa":         (r"(DSA\s+" + STAR + r")(\d[\d,]*)(\+\))", 100),
+              "codeforces":  (r"(Codeforces\s+Pupil\s+\()(\d[\d,]*)(\+\))", 100),
+              "code360":     (r"(Code360\s+Specialist\s+\()(\d[\d,]*)(\+\))", 10),
+              "atcoder":     (r"(AtCoder\s+)(\d[\d,]*)(\+)", 10),
+          }
+
+          LABELS = {
+              "problems": "Problems Solved", "active_days": "Active Coding Days",
+              "streak": "Days Current Streak", "contests": "Contests",
+              "leetcode": "LeetCode", "codechef": "CodeChef", "dsa": "DSA",
+              "codeforces": "Codeforces", "code360": "Code360", "atcoder": "AtCoder",
+          }
+
+
+          def commit_message(changes, now=None):
+              """Date-based subject + body listing exactly what changed (IST date)."""
+              now = now or datetime.now(ZoneInfo("Asia/Kolkata"))
+              subject = f"stats: update coding stats \u2014 {now:%B} {now.day}, {now.year}"
+              # html and js copies carry identical changes; list each metric once
+              merged = {}
+              for scope_changes in changes.values():
+                  merged.update(scope_changes)
+              lines = [f"{LABELS[m]}: {o}+ \u2192 {n}+" for m, (o, n) in
+                       ((m, merged[m]) for m in METRICS if m in merged)]
+              return subject + "\n\n" + "\n".join(lines) + "\n"
+
+
+          HTML_SCOPE = re.compile(r'(<p id="hero-tagline"[^>]*>)(.*?)(</p>)', re.S)
+          JS_SCOPE = re.compile(r'(\bhero_tagline:\s*")((?:[^"\\]|\\.)*)(")', re.S)
+
+
+          def die(msg):
+              print("ERROR: " + msg, file=sys.stderr)
+              sys.exit(1)
+
+
+          def floor_to(n, step):
+              return n // step * step
+
+
+          def fmt(n, had_comma):
+              return f"{n:,}" if had_comma else str(n)
+
+
+          def update_scope(text, targets):
+              """Return (new_text, {metric: (old, new)}). Only digits/commas inside numbers change."""
+              changes = {}
+              for m, (pat, _) in METRICS.items():
+                  hits = list(re.finditer(pat, text))
+                  if len(hits) != 1:
+                      die(f"tagline: metric '{m}' matched {len(hits)} times (expected 1)")
+                  if m not in targets:
+                      continue
+                  h = hits[0]
+                  old = h.group(2)
+                  new = fmt(targets[m], "," in old)
+                  if new != old:
+                      text = text[:h.start(2)] + new + text[h.end(2):]
+                      changes[m] = (old, new)
+              return text, changes
+
+
+          def current_values(text):
+              out = {}
+              for m, (pat, _) in METRICS.items():
+                  hits = list(re.finditer(pat, text))
+                  if len(hits) != 1:
+                      die(f"tagline: metric '{m}' matched {len(hits)} times (expected 1)")
+                  out[m] = hits[0].group(2)
+              return out
+
+
+          def apply(html, raw):
+              unknown = set(raw) - set(SYNCED)
+              if unknown:
+                  die(f"unknown metrics in source data: {sorted(unknown)}")
+              targets = {m: floor_to(raw[m], METRICS[m][1]) for m in raw}
+              result, all_changes = html, {}
+              for name, scope in (("html", HTML_SCOPE), ("js", JS_SCOPE)):
+                  found = list(scope.finditer(result))
+                  if len(found) != 1:
+                      die(f"{name} tagline scope matched {len(found)} times (expected 1)")
+              # both copies of the tagline must agree before we touch anything
+              vals = [current_values(scope.search(html).group(2)) for scope in (HTML_SCOPE, JS_SCOPE)]
+              if vals[0] != vals[1]:
+                  die("HTML tagline and JS hero_tagline currently disagree; refusing to edit")
+              for name, scope in (("html", HTML_SCOPE), ("js", JS_SCOPE)):
+                  s = scope.search(result)
+                  new_inner, ch = update_scope(s.group(2), targets)
+                  # safety: only digits/commas may differ
+                  strip = lambda t: re.sub(r"[\d,]", "", t)
+                  if strip(new_inner) != strip(s.group(2)):
+                      die(f"{name}: non-numeric change detected; aborting")
+                  result = result[:s.start(2)] + new_inner + result[s.end(2):]
+                  all_changes[name] = ch
+              return result, all_changes
+
+
+          def node(data, path):
+              for k in path:
+                  data = data[k]
+              return data
+
+
+          def utc_today():
+              return datetime.now(ZoneInfo("UTC")).date()
+
+
+          def active_day_set(platforms):
+              """Distinct UTC days with at least one submission on any platform."""
+              days = set()
+              for p in platforms:
+                  cal = ((p.get("dailyActivityStatsResponse") or {}).get("submissionCalendar")) or {}
+                  for ts, n in cal.items():
+                      if int(n) > 0:
+                          days.add(int(ts) // 86400)
+              return days
+
+
+          def derive(platforms):
+              problems = sum(int(((p.get("totalQuestionStats") or {}).get("totalQuestionCounts")) or 0)
+                             for p in platforms)
+              contests = 0
+              for p in platforms:
+                  c = p.get("contestActivityStats") or {}
+                  contests += len(c.get("contestActivityList") or []) + len(c.get("dsaContestActivityList") or [])
+              days = active_day_set(platforms)
+              today = utc_today().toordinal() - datetime(1970, 1, 1).toordinal()
+              d = today if today in days else today - 1  # today may not have activity yet
+              streak = 0
+              while d in days:
+                  streak += 1
+                  d -= 1
+              return {"problems": problems, "contests": contests,
+                      "active_days": len(days), "streak": streak}
+
+
+          def fetch_stats():
+              if not CODOLIO_ENDPOINT or any(p is None for p in PATHS.values()):
+                  die("Codolio endpoint / field mapping not configured")
+              req = urllib.request.Request(CODOLIO_ENDPOINT, headers={
+                  "accept": "application/json", "referer": "https://codolio.com/",
+                  "user-agent": "Mozilla/5.0 (portfolio-stats-sync)"})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      if r.status != 200:
+                          die(f"Codolio returned HTTP {r.status}")
+                      data = json.load(r)
+              except Exception as e:
+                  die(f"could not fetch Codolio: {e}")
+              try:
+                  if data["status"]["success"] is not True:
+                      die("Codolio reported failure")
+                  if data["data"]["profileName"] != EXPECTED_PROFILE:
+                      die("response is not for the expected profile")
+                  platforms = node(data, PLATFORMS_PATH)
+                  if not isinstance(platforms, list) or len(platforms) < 2 \
+                          or not all(isinstance(p, dict) and p.get("platform") for p in platforms):
+                      die("platform list missing or malformed")
+                  stats = derive(platforms)
+              except SystemExit:
+                  raise
+              except Exception as e:
+                  die(f"could not extract required stats: {e}")
+              if any(stats[m] < 0 for m in SYNCED) or stats["problems"] == 0 or stats["active_days"] == 0:
+                  die("implausible data (zero or negative totals)")
+              if stats["streak"] > stats["active_days"]:
+                  die("implausible data: current streak exceeds active days")
+              return {m: stats[m] for m in SYNCED}
+
+
+          def main():
+              raw = fetch_stats() if len(sys.argv) < 2 else json.load(open(sys.argv[1]))
+              html = open(INDEX, encoding="utf-8", newline="").read()
+              new, changes = apply(html, raw)
+              if new == html:
+                  print("No displayed value changed; nothing to do.")
+                  return
+              open(INDEX, "w", encoding="utf-8", newline="").write(new)
+              msg_file = os.environ.get("COMMIT_MSG_FILE")
+              if msg_file:
+                  open(msg_file, "w", encoding="utf-8").write(commit_message(changes))
+              for k, ch in changes.items():
+                  for m, (o, n) in ch.items():
+                      print(f"{k}: {m}: {o} -> {n}")
+
+
+          if __name__ == "__main__":
+              main()
+          PYEOF
+          python3 "$RUNNER_TEMP/sync_tagline_stats.py"
+
+      - name: Commit only if a displayed value changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo "No change; not committing."
+            exit 0
+          fi
+          # Safety net: nothing except index.html may be modified
+          if [ -n "$(git status --porcelain | grep -v ' index.html$' || true)" ]; then
+            echo "Unexpected changes outside index.html; aborting." >&2
+            exit 1
+          fi
+          [ -s "$RUNNER_TEMP/commit_msg.txt" ] || { echo "Missing commit message; aborting." >&2; exit 1; }
+          # Author = the repo owner's GitHub account (noreply address is always
+          # linked to the account), so the commit counts as a contribution.
+          ID="$(gh api "users/$OWNER" --jq .id)"
+          [[ "$ID" =~ ^[0-9]+$ ]] || { echo "Could not resolve account id; aborting." >&2; exit 1; }
+          git add index.html
+          git -c user.name="Sriram G S" \
+              -c user.email="${ID}+${OWNER}@users.noreply.github.com" \
+              commit -F "$RUNNER_TEMP/commit_msg.txt"
+          git push
