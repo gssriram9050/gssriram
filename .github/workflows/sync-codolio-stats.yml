@@ -4,8 +4,6 @@ on:
   schedule:
     # 20:30 UTC = 02:00 IST (Asia/Kolkata, UTC+5:30, no DST), every day
     - cron: "30 20 * * *"
-    # TEMPORARY test run: 09:51 IST (04:21 UTC) - delete these two lines after the test
-    - cron: "21 4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -17,29 +15,35 @@ concurrency:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    # Pinned on purpose: `ubuntu-latest` moves to Ubuntu 26.04 between 2026-10-19 and 2026-11-19.
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Fetch Codolio stats and update tagline numbers
+      - name: Fetch Codolio stats, update tagline numbers, append log row
         env:
           COMMIT_MSG_FILE: ${{ runner.temp }}/commit_msg.txt
+          STATUS_FILE: ${{ runner.temp }}/sync_status.txt
         run: |
           set -euo pipefail
           cat > "$RUNNER_TEMP/sync_tagline_stats.py" <<'PYEOF'
           #!/usr/bin/env python3
-          """Sync Codolio stats into the hero tagline numbers of index.html (numbers only).
+          """Sync Codolio stats into the hero tagline numbers of index.html and append a
+          record of the run to codolio-sync-log.md.
 
-          Fails closed: any doubt -> exit non-zero, nothing written.
+          Only digits inside the existing tagline may change. Nothing is written to
+          index.html unless every check passed. Every completed run (success or failure)
+          appends exactly one row to the log; the workflow then commits only those files.
           """
-          import json, os, re, sys, urllib.request
+          import json, os, re, stat, sys, tempfile, traceback, urllib.request
           from datetime import datetime
           from zoneinfo import ZoneInfo
 
           INDEX = "index.html"
+          LOG = "codolio-sync-log.md"
 
-          # ---- Codolio source (must be confirmed against the real response) ----------
+          # ---- Codolio source (verified against the live dashboard) ------------------
           CODOLIO_ENDPOINT = "https://api.codolio.com/profile?userKey=gssriram"
           EXPECTED_PROFILE = "gssriram"
           # Codolio publishes no ready-made overall totals: the dashboard derives them from
@@ -74,26 +78,179 @@ jobs:
           }
 
 
-          def commit_message(changes, now=None):
-              """Date-based subject + body listing exactly what changed (IST date)."""
-              now = now or datetime.now(ZoneInfo("Asia/Kolkata"))
-              subject = f"stats: update coding stats \u2014 {now:%B} {now.day}, {now.year}"
-              # html and js copies carry identical changes; list each metric once
-              merged = {}
-              for scope_changes in changes.values():
-                  merged.update(scope_changes)
-              lines = [f"{LABELS[m]}: {o}+ \u2192 {n}+" for m, (o, n) in
-                       ((m, merged[m]) for m in METRICS if m in merged)]
-              return subject + "\n\n" + "\n".join(lines) + "\n"
-
-
           HTML_SCOPE = re.compile(r'(<p id="hero-tagline"[^>]*>)(.*?)(</p>)', re.S)
           JS_SCOPE = re.compile(r'(\bhero_tagline:\s*")((?:[^"\\]|\\.)*)(")', re.S)
 
 
+
+          class SyncFailure(Exception):
+              """Expected failure (source unreachable/unverifiable, tagline not found...)."""
+
+
+          class LogError(Exception):
+              """The log file exists but is not in the expected format; nothing is written."""
+
+
           def die(msg):
               print("ERROR: " + msg, file=sys.stderr)
-              sys.exit(1)
+              raise SyncFailure(msg)
+
+
+          STATUSES = ("UPDATED", "NO CHANGES", "CHANGES NOT ENOUGH", "FAILED", "UNKNOWN ERROR")
+          LOG_HEADER = ("| Run | Time (IST) | Trigger | Why it ran | Result | Problems | Contests "
+                        "| Active Days | Streak | Details |")
+          LOG_INTRO = (
+              "# Codolio sync log\n\n"
+              "Automatic record of every run of the \"Sync portfolio coding statistics\" workflow "
+              "(oldest first). Times are IST. Each statistic shows the value displayed in the "
+              "portfolio tagline, with the live Codolio value in brackets.\n\n"
+              + LOG_HEADER + "\n|---|---|---|---|---|---|---|---|---|---|\n"
+          )
+
+
+          def clean(text, limit=160):
+              text = re.sub(r"\s+", " ", str(text)).replace("|", "/").replace("`", "'").strip()
+              return text if len(text) <= limit else text[: limit - 1] + "\u2026"
+
+
+          def run_context():
+              event = os.environ.get("GITHUB_EVENT_NAME", "")
+              actor = clean(os.environ.get("GITHUB_ACTOR", "unknown"), 40)
+              if event == "schedule":
+                  trigger, why = "SCHEDULED", "Daily automatic run (2:00 AM IST schedule)"
+              elif event == "workflow_dispatch":
+                  trigger, why = "MANUAL", f"Started manually by {actor} (Run workflow)"
+              else:
+                  trigger, why = (clean(event, 30).upper() or "UNKNOWN"), f"Unexpected trigger: {clean(event, 30) or 'none'}"
+              run_id = os.environ.get("GITHUB_RUN_ID", "")
+              repo = os.environ.get("GITHUB_REPOSITORY", "")
+              server = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+              number = os.environ.get("GITHUB_RUN_NUMBER", "?")
+              run = f"[#{number}]({server}/{repo}/actions/runs/{run_id})" if run_id and repo else f"#{number}"
+              return {"trigger": trigger, "why": why, "run": run,
+                      "now": datetime.now(ZoneInfo("Asia/Kolkata"))}
+
+
+          def read_log():
+              if not os.path.exists(LOG):
+                  return LOG_INTRO
+              text = open(LOG, encoding="utf-8", newline="").read()
+              if LOG_HEADER not in text:
+                  raise LogError(f"{LOG} exists but its table header was not found; refusing to touch it")
+              return text
+
+
+          def last_raw(log_text):
+              """Live values (problems, contests, active_days, streak) from the newest row that has them."""
+              for line in reversed(log_text.splitlines()):
+                  if not line.startswith("|"):
+                      continue
+                  cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                  if len(cells) != 10:
+                      continue
+                  found = [re.search(r"\((\d+)\)", c) for c in cells[5:9]]
+                  if all(found):
+                      return tuple(int(f.group(1)) for f in found)
+              return None
+
+
+          def commit_message(status, ctx, raw, display, changes, details):
+              now = ctx["now"]
+              date = f"{now:%B} {now.day}, {now.year}"
+              subject = {
+                  "UPDATED": f"stats: update coding stats \u2014 {date}",
+                  "NO CHANGES": f"log: coding stats unchanged \u2014 {date}",
+                  "CHANGES NOT ENOUGH": f"log: coding stats moved, displays unchanged \u2014 {date}",
+                  "FAILED": f"log: coding stats sync failed \u2014 {date}",
+                  "UNKNOWN ERROR": f"log: coding stats sync error \u2014 {date}",
+              }[status]
+              if status == "UPDATED":
+                  merged = {}
+                  for scope_changes in changes.values():   # html and js copies are identical
+                      merged.update(scope_changes)
+                  body = [f"{LABELS[m]}: {o}+ \u2192 {n}+" for m in METRICS if m in merged
+                          for o, n in [merged[m]]]
+              else:
+                  body = [details]
+              body += ["", f"Trigger: {ctx['trigger']} at {now:%Y-%m-%d %H:%M} IST", f"Result: {status}"]
+              if raw:
+                  body.append("Stats: " + ", ".join(
+                      f"{name} {display[m]}+ ({raw[m]})" for m, name in
+                      (("problems", "Problems"), ("contests", "Contests"),
+                       ("active_days", "Active Days"), ("streak", "Streak"))))
+              body.append(f"Log: {LOG}")
+              return subject + "\n\n" + "\n".join(body) + "\n"
+
+
+          def log_row(status, ctx, raw, display, details):
+              stat_cells = [f"{display[m]}+ ({raw[m]})" for m in SYNCED] if raw else ["\u2014"] * 4
+              cells = [ctx["run"], f"{ctx['now']:%Y-%m-%d %H:%M}", ctx["trigger"], clean(ctx["why"], 80),
+                       status] + stat_cells + [clean(details)]
+              return "| " + " | ".join(cells) + " |"
+
+
+          def atomic_write(path, text):
+              directory = os.path.dirname(os.path.abspath(path))
+              mode = stat.S_IMODE(os.stat(path).st_mode) if os.path.exists(path) else 0o644
+              fd, tmp = tempfile.mkstemp(dir=directory, prefix=".sync-")
+              try:
+                  with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+                      f.write(text)
+                  os.chmod(tmp, mode)
+                  os.replace(tmp, path)
+              except BaseException:
+                  if os.path.exists(tmp):
+                      os.unlink(tmp)
+                  raise
+
+
+          def main():
+              ctx = run_context()
+              html = open(INDEX, encoding="utf-8", newline="").read()
+              log_text = read_log()                       # LogError -> abort before anything happens
+              previous = last_raw(log_text)
+              raw = display = None
+              changes, new_html = {}, html
+              try:
+                  raw = fetch_stats()
+                  new_html, changes = apply(html, raw)
+                  shown = current_values(HTML_SCOPE.search(new_html).group(2))
+                  display = {m: shown[m] for m in SYNCED}
+                  if new_html != html:
+                      status = "UPDATED"
+                      merged = {}
+                      for scope_changes in changes.values():
+                          merged.update(scope_changes)
+                      details = "; ".join(f"{LABELS[m]} {o}+ \u2192 {n}+" for m in METRICS if m in merged
+                                          for o, n in [merged[m]])
+                  elif previous is not None and previous != tuple(raw[m] for m in SYNCED):
+                      status = "CHANGES NOT ENOUGH"
+                      details = "Live values moved since the last run but no rounded display value changed"
+                  else:
+                      status = "NO CHANGES"
+                      details = "Rounded display values already match the portfolio"
+              except SyncFailure as e:
+                  status, details, raw, display, new_html = "FAILED", str(e), None, None, html
+              except Exception as e:                       # anything unexpected
+                  traceback.print_exc()
+                  status, details, raw, display, new_html = "UNKNOWN ERROR", f"{type(e).__name__}: {e}", None, None, html
+
+              if not log_text.endswith("\n"):
+                  log_text += "\n"
+              new_log = log_text + log_row(status, ctx, raw, display, details) + "\n"
+              if status == "UPDATED":
+                  atomic_write(INDEX, new_html)
+              try:
+                  atomic_write(LOG, new_log)
+              except BaseException:
+                  if status == "UPDATED":
+                      atomic_write(INDEX, html)            # never leave a half-finished update
+                  raise
+              msg = commit_message(status, ctx, raw, display, changes, details)
+              open(os.environ["COMMIT_MSG_FILE"], "w", encoding="utf-8").write(msg)
+              open(os.environ["STATUS_FILE"], "w", encoding="utf-8").write(status)
+              print(f"Result: {status} - {details}")
+
 
 
           def floor_to(n, step):
@@ -220,7 +377,7 @@ jobs:
                           or not all(isinstance(p, dict) and p.get("platform") for p in platforms):
                       die("platform list missing or malformed")
                   stats = derive(platforms)
-              except SystemExit:
+              except SyncFailure:
                   raise
               except Exception as e:
                   die(f"could not extract required stats: {e}")
@@ -231,49 +388,66 @@ jobs:
               return {m: stats[m] for m in SYNCED}
 
 
-          def main():
-              raw = fetch_stats() if len(sys.argv) < 2 else json.load(open(sys.argv[1]))
-              html = open(INDEX, encoding="utf-8", newline="").read()
-              new, changes = apply(html, raw)
-              if new == html:
-                  print("No displayed value changed; nothing to do.")
-                  return
-              open(INDEX, "w", encoding="utf-8", newline="").write(new)
-              msg_file = os.environ.get("COMMIT_MSG_FILE")
-              if msg_file:
-                  open(msg_file, "w", encoding="utf-8").write(commit_message(changes))
-              for k, ch in changes.items():
-                  for m, (o, n) in ch.items():
-                      print(f"{k}: {m}: {o} -> {n}")
 
 
           if __name__ == "__main__":
-              main()
+              try:
+                  main()
+              except LogError as e:
+                  print("ERROR: " + str(e), file=sys.stderr)
+                  sys.exit(1)
           PYEOF
           python3 "$RUNNER_TEMP/sync_tagline_stats.py"
 
-      - name: Commit only if a displayed value changed
+      - name: Commit and push (only index.html and codolio-sync-log.md)
         env:
           GH_TOKEN: ${{ github.token }}
           OWNER: ${{ github.repository_owner }}
+          COMMIT_MSG_FILE: ${{ runner.temp }}/commit_msg.txt
+          STATUS_FILE: ${{ runner.temp }}/sync_status.txt
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html; then
-            echo "No change; not committing."
-            exit 0
-          fi
-          # Safety net: nothing except index.html may be modified
-          if [ -n "$(git status --porcelain | grep -v ' index.html$' || true)" ]; then
-            echo "Unexpected changes outside index.html; aborting." >&2
+          if [ ! -s "$STATUS_FILE" ] || [ ! -s "$COMMIT_MSG_FILE" ]; then
+            echo "No sync result was recorded; aborting." >&2
             exit 1
           fi
-          [ -s "$RUNNER_TEMP/commit_msg.txt" ] || { echo "Missing commit message; aborting." >&2; exit 1; }
-          # Author = the repo owner's GitHub account (noreply address is always
+          STATUS="$(cat "$STATUS_FILE")"
+          # Safety net: nothing except these two files may differ from the checkout
+          while IFS= read -r f; do
+            case "$f" in
+              index.html|codolio-sync-log.md|"") ;;
+              *) echo "Unexpected change outside the allowed files: $f" >&2; exit 1 ;;
+            esac
+          done <<< "$(git status --porcelain --untracked-files=all | sed -E 's/^.. //')"
+          if [ "$STATUS" = "UPDATED" ]; then
+            if git diff --quiet -- index.html; then
+              echo "Status UPDATED but index.html is unchanged; aborting." >&2; exit 1
+            fi
+          elif ! git diff --quiet -- index.html; then
+            echo "index.html was modified on a $STATUS run; aborting." >&2; exit 1
+          fi
+          if [ -z "$(git status --porcelain -- codolio-sync-log.md)" ]; then
+            echo "The log row was not written; aborting." >&2; exit 1
+          fi
+          # Author = the repo owner's GitHub account (the noreply address is always
           # linked to the account), so the commit counts as a contribution.
           ID="$(gh api "users/$OWNER" --jq .id)"
           [[ "$ID" =~ ^[0-9]+$ ]] || { echo "Could not resolve account id; aborting." >&2; exit 1; }
-          git add index.html
-          git -c user.name="Sriram G S" \
-              -c user.email="${ID}+${OWNER}@users.noreply.github.com" \
-              commit -F "$RUNNER_TEMP/commit_msg.txt"
-          git push
+          export GIT_AUTHOR_NAME="Sriram G S" GIT_AUTHOR_EMAIL="${ID}+${OWNER}@users.noreply.github.com"
+          export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+          git add -- codolio-sync-log.md
+          if [ "$STATUS" = "UPDATED" ]; then git add -- index.html; fi
+          git commit -F "$COMMIT_MSG_FILE"
+          git push || { git pull --rebase origin "$GITHUB_REF_NAME" && git push; }
+
+      - name: Fail the run if the sync itself failed
+        env:
+          STATUS_FILE: ${{ runner.temp }}/sync_status.txt
+        run: |
+          STATUS="$(cat "$STATUS_FILE")"
+          case "$STATUS" in
+            FAILED|"UNKNOWN ERROR")
+              echo "::error title=Codolio sync $STATUS::Recorded in codolio-sync-log.md; see the first step's log for the reason."
+              exit 1 ;;
+          esac
+          echo "Sync result: $STATUS"
